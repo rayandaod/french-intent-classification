@@ -26,7 +26,7 @@ Thank you ILLUIN Technology for this opportunity!
 
 First clone the repository:
 ```bash
-git clone
+git clone https://github.com/rayandaod/intent-classification.git
 ```
 
 Create a virtual environment (e.g with conda):
