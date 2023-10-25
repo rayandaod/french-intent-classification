@@ -10,3 +10,5 @@ nltk_data/
 
 # Undesired file types
 *.DS_Store
+**/.ipynb_checkpoints
+**/*.pyc
