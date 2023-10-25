@@ -1,0 +1,12 @@
+# Draft notebook
+draft.ipynb
+
+# Data
+**/CLINC150*
+nltk_data/
+
+# Keep every .gitkeep file
+!.gitkeep
+
+# Undesired file types
+*.DS_Store
