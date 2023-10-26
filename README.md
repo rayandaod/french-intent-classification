@@ -83,8 +83,8 @@ Preprocessing steps:
 
 | Model | Accuracy | Precision | Recall | F1-score | Speed |
 | ----- | -------- | --------- | ------ | -------- | ----- |
-| Sentence CamemBERT (best) |
-| English pre-trained model |
+| Sentence CamemBERT |
+| English pre-trained |
 
 
 ### Example test set (imbalanced, small)
@@ -93,8 +93,8 @@ It was provided to me and is located in `data/ILLUIN/examples.csv`.
 
 | Model | Accuracy | Precision | Recall | F1-score | Speed |
 | ----- | -------- | --------- | ------ | -------- | ----- |
-| Sentence CamemBERT (best) | 0.93 | 0.94 | 0.96 | 0.94 | 4.01s |
-| English pre-trained model | 0.95 | 0.96 | 0.95 | 0.95 | 55.06s |
+| Sentence CamemBERT | 0.96 | 0.96 | 0.98 | 0.96 | 4.18s |
+| English pre-trained | 0.95 | 0.96 | 0.95 | 0.95 | 55.06s |
 
 
 ## Thought process, challenges,  ideas
