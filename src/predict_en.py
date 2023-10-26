@@ -116,14 +116,14 @@ def prepare_and_predict(user_input: str, config:dict, verbose: bool = False) -> 
 
 
 if __name__ == '__main__':
-    # Get the config
-    config = parse_config("config.yaml")
-
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--text', type=str, help='The text to predict the intent of.')
-    parser.add_argument('--verbose', action='store_true', help='Whether to print logs.')
+    parser.add_argument('--text', '-t', type=str, help='The text to predict the intent of.')
+    parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print logs.')
     args = parser.parse_args()
+
+    # Get the config
+    config = parse_config("config.yaml")
 
     # Predict
     prediction, speed = prepare_and_predict(user_input=args.text,

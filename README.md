@@ -176,11 +176,6 @@ The model pre-trained on CLINC150 was chosen based on its popularity. A deeper m
 - [ ] Complete the readme and comment the code properly
 - [ ] Add a requirements.txt file
 
-
-## FlauBERT word embeddings
-Choose among ['flaubert/flaubert_small_cased', 'flaubert/flaubert_base_uncased', 
-              'flaubert/flaubert_base_cased', 'flaubert/flaubert_large_cased']
-
 ## 
 If you are working with others, they should also install nbstripout and run nbstripout --install in the repository to ensure that their commits also have the notebook outputs stripped.
 

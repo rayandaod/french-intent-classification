@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def parse_config(config_path:str):
+def parse_config(config_path:str) -> dict:
     """Parse the config.yaml file
 
     Args:
@@ -17,6 +17,20 @@ def parse_config(config_path:str):
         config = yaml.safe_load(config_file)
     
     return config
+
+
+def get_model_name_from_recipe(recipe: dict) -> str:
+    # Get the model type (logReg, etc.)
+    model_type = recipe['model_type']
+
+    # Get the dataset version
+    clinc150_version = recipe['clinc150_version']
+
+    # Get the dataset folder name from the data preprocessing function short names
+    prep_fn_shorts = recipe['training_data_prep'] + recipe['training_inference_data_prep']
+    dataset_folder_name = '_'.join(prep_fn_shorts)
+
+    return f"{model_type}_on_{clinc150_version.upper()}_{dataset_folder_name}"
 
 
 def plot_class_distribution(df:pd.DataFrame, title:str, highlighted_classes:list=[]) -> None:

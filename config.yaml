@@ -27,8 +27,17 @@ translator_en_fr_model_path: 'Helsinki-NLP/opus-mt-tc-big-en-fr'
 pretrained_english_model_path: "dbounds/roberta-large-finetuned-clinc"
 
 # Encoder model paths (huggingface)
-flaubert_model_path: 'flaubert/flaubert_base_uncased'
-sentence_camembert_model_path: "dangvantuan/sentence-camembert-base"
+flaubert_model_paths: {
+  falubertSmallCased: 'flaubert/flaubert_small_cased',
+  flaubertBaseUncased: 'flaubert/flaubert_base_uncased',
+  flaubertBaseCased: 'flaubert/flaubert_base_cased',
+  flaubertLargeCased: 'flaubert/flaubert_large_cased'
+
+}
+sentence_camembert_model_paths: {
+  sentenceCamembertBase: "dangvantuan/sentence-camembert-base",
+  sentenceCamembertLarge: "dangvantuan/sentence-camembert-large"
+}
 
 # Recipes
 recipes: {
@@ -40,10 +49,10 @@ recipes: {
                         'carry',
                         'trans'],
     training_inference_data_prep: ['stop',
-                                    'flaubert',
+                                    'flaubertBaseUncased',
                                     'avg'],
     add_val: True,
-    model: "logReg"
+    model_type: "logReg"
   },
 
   camembert: {
@@ -52,9 +61,9 @@ recipes: {
                           'down',
                           'carry',
                           'trans'],
-    training_inference_data_prep: ['sentenceCamembert'],
+    training_inference_data_prep: ['sentenceCamembertBase'],
     add_val: True,
-    model: "logReg"
+    model_type: "logReg"
   }
 }
 

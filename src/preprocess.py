@@ -17,28 +17,47 @@ from tqdm import tqdm
 
 from src.helper import parse_config
 
-# Get the config
-config = parse_config("/Users/rayandaod/Documents/Docs/Job Search/ILLUIN/intent_classification/config.yaml")
 
-# Set random seed
-np.random.seed(config['random_state'])
+def load_pretrained_models(prep_fn_shorts: list, config:dict, verbose: bool=False) -> dict:
+    # Set random seed
+    np.random.seed(config['random_state'])
 
-# Get the stopwords from nltk
-if config['verbose']: print('\n> Gathering french stopwords...')
-nltk_path = '/Users/rayandaod/Documents/Docs/Job Search/ILLUIN/intent_classification/data/_nltk_data'
-if not os.path.exists(nltk_path):
-    nltk.download('stopwords', download_dir=nltk_path)
-nltk.data.path.append(nltk_path)
-french_stopwords = nltk.corpus.stopwords.words('french')
+    # Get the stopwords from nltk
+    if 'stop' in prep_fn_shorts:
+        if verbose: print('\n> Gathering french stopwords...')
+        nltk_path = '/Users/rayandaod/Documents/Docs/Job Search/ILLUIN/intent_classification/data/_nltk_data'
+        if not os.path.exists(nltk_path):
+            nltk.download('stopwords', download_dir=nltk_path)
+        nltk.data.path.append(nltk_path)
+        french_stopwords = nltk.corpus.stopwords.words('french')
+    else:
+        french_stopwords = None
 
-# Load the FlauBERT model and tokenizer
-if config['verbose']: print('\n> Loading the FlauBERT model and tokenizer...')
-flaubert_tokenizer = FlaubertTokenizer.from_pretrained(config['flaubert_model_path'], do_lowercase=True)
-flaubert, log = FlaubertModel.from_pretrained(config['flaubert_model_path'], output_loading_info=True)
+    # Load the FlauBERT model and tokenizer (base or large)
+    if 'flaubertBase' in prep_fn_shorts or 'flaubertLarge' in prep_fn_shorts:
+        if verbose: print('\n> Loading the FlauBERT model and tokenizer...')
+        flaubert_model_short_name = [s for s in prep_fn_shorts if s.startswith('flaubert')][0]
+        flaubert_model_path = config['flaubert_model_paths'][flaubert_model_short_name]
+        flaubert_tokenizer = FlaubertTokenizer.from_pretrained(flaubert_model_path, do_lowercase=True)
+        flaubert, log = FlaubertModel.from_pretrained(flaubert_model_path, output_loading_info=True)
+    else:
+        flaubert_tokenizer = None
+        flaubert = None
 
-# Load the CamemBERT model and tokenizer
-if config['verbose']: print('\n> Loading the CamemBERT model...')
-sentence_camembert_model =  SentenceTransformer(config['sentence_camembert_model_path'])
+    # Load the CamemBERT model and tokenizer
+    if 'sentenceCamembertBase' in prep_fn_shorts or 'sentenceCamembertLarge' in prep_fn_shorts:
+        if verbose: print('\n> Loading the CamemBERT model...')
+        camembert_model_short_name = [s for s in prep_fn_shorts if s.startswith('sentenceCamembert')][0]
+        sentence_camembert_model =  SentenceTransformer(config['sentence_camembert_model_paths'][camembert_model_short_name])
+    else:
+        sentence_camembert_model = None
+
+    return {
+        'french_stopwords': french_stopwords,
+        'flaubert_tokenizer': flaubert_tokenizer,
+        'flaubert': flaubert,
+        'sentence_camembert_model': sentence_camembert_model
+    }
 
 
 def load_clinc150_dataset_split(clinc150_dataset:DatasetDict, split:str='train', verbose:bool=False) -> pd.DataFrame:
@@ -64,7 +83,7 @@ def load_clinc150_dataset_split(clinc150_dataset:DatasetDict, split:str='train',
     return df
 
 
-def oos_strat_1(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+def oos_strat_1(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Applying the OOS strategy 1...')
 
     # Copy the dataframe
@@ -73,11 +92,10 @@ def oos_strat_1(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     # Consider the classes that are not in config['classes'] as out-of-scope classes
     df.loc[~df["label"].isin(config['classes']), "label"] = "out_of_scope"
 
-    if verbose: print(df.iloc[0])
     return df
 
 
-def oos_strat_2(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+def oos_strat_2(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Applying the OOS strategy 2...')
 
     # Copy the dataframe
@@ -89,11 +107,10 @@ def oos_strat_2(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     # Reset the index
     df = df.reset_index(drop=True)
 
-    if verbose: print(df.iloc[0])
     return df
 
 
-def oos_strat_3(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+def oos_strat_3(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Applying the OOS strategy 3...')
 
     # Copy the dataframe
@@ -108,11 +125,10 @@ def oos_strat_3(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     # Reset the index
     df = df.reset_index(drop=True)
 
-    if verbose: print(df.iloc[0])
     return df
 
 
-def downsample_oos(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+def downsample_oos(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Downsampling the out-of-scope class...')
 
     # Copy the dataframe
@@ -131,11 +147,10 @@ def downsample_oos(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     # Reset the index
     df = df.reset_index(drop=True)
 
-    if verbose: print(df.iloc[0])
     return df
 
 
-def carry_on_enhancer_for_trans(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+def carry_on_enhancer_for_trans(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Enhancing carry-on examples for english-to-french translation...')
 
     luggage_candidates = ['luggage', 'baggage', 'suitcase', 'bag', 'case']
@@ -156,11 +171,10 @@ def carry_on_enhancer_for_trans(df:pd.DataFrame, verbose:bool=False) -> pd.DataF
     # Replace occurences of 'carry-ons' in the texts by 'carry on' and a random luggages candidate
     df['text'] = df['text'].apply(lambda x: x.replace('carry-ons', f'carry on {luggages_candidates[np.random.randint(len(luggages_candidates))]}'))
 
-    if verbose: print(df.iloc[0])
     return df
 
 
-def translate_en_fr(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+def translate_en_fr(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Translating the text from English to French...')
 
     # Copy the dataframe
@@ -181,31 +195,38 @@ def translate_en_fr(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     df = df.rename(columns={'text': 'text_en'})
     df = df.rename(columns={'text_fr': 'text'})
 
-    if verbose: print(df.iloc[0]['text'])
+    if verbose: print('First example translated:', df.iloc[0]['text'])
 
     return df
 
 
-def remove_stopwords(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+def remove_stopwords(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Removing the stopwords...')
 
     # Copy the dataframe
     df = df.copy()
 
+    # Get the stopwords
+    french_stopwords = pretrained_models['french_stopwords']
+
     # Remove the stopwords
     df['text'] = df['text'].apply(lambda x: ' '.join([word for word in x.split() if word not in french_stopwords]))
 
-    if verbose: print(df.iloc[0]['text'])
+    if verbose: print('First example without stopwords:', df.iloc[0]['text'])
     return df
 
 
-def flaubert_encoder(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+def flaubert_encoder(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Encoding each word using FlauBERT...')
 
     # Copy the dataframe
     df = df.copy()
 
-    # Tokenize each row
+    # Get the FlauBERT tokenizer and model
+    flaubert_tokenizer = pretrained_models['flaubert_tokenizer']
+    flaubert = pretrained_models['flaubert']
+
+    # Tokenize each row using the FlauBERT tokenizer
     # Use tqdm to display a progress bar, only if verbose is True
     flaubert_tokenizer_fn = lambda x: flaubert_tokenizer.tokenize(x)
     if verbose:
@@ -222,7 +243,7 @@ def flaubert_encoder(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     else:
         df['token_id'] = df['token'].apply(flaubert_token_to_id_fn)
 
-    # Get the embeddings
+    # Get the FlauBERT embeddings
     # Use tqdm to display a progress bar, only if verbose is True
     flaubert_fn = lambda x: flaubert(torch.tensor([x], dtype=torch.long))[0][0].detach().numpy()
     if verbose:
@@ -233,11 +254,11 @@ def flaubert_encoder(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     # Remove the token and token_id columns
     df = df.drop(['token', 'token_id'], axis=1)
 
-    if verbose: print(df.iloc[0]['word_embeddings'].shape)
+    if verbose: print('Word embeddings shape:', df.iloc[0]['word_embeddings'].shape)
     return df
 
 
-def average_word_emb(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+def average_word_emb(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Averaging the word embeddings...')
 
     # Copy the dataframe
@@ -253,11 +274,11 @@ def average_word_emb(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     # Remove the word_embeddings column
     df = df.drop('word_embeddings', axis=1)
 
-    if verbose: print(df.iloc[0]['embedding'].shape)
+    if verbose: print('Sentence embedding shape:', df.iloc[0]['embedding'].shape)
     return df
 
 
-def sum_word_emb(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+def sum_word_emb(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Summing the word embeddings...')
 
     # Copy the dataframe
@@ -273,11 +294,11 @@ def sum_word_emb(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     # Remove the word_embeddings column
     df = df.drop('word_embeddings', axis=1)
 
-    if verbose: print(df.iloc[0]['embedding'].shape)
+    if verbose: print('Sentence embedding shape:', df.iloc[0]['embedding'].shape)
     return df
 
 
-def norm_emb(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+def norm_emb(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Normalizing the embedding...')
 
     # Copy the dataframe
@@ -290,15 +311,18 @@ def norm_emb(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     else:
         df['embedding'] = df['embedding'].apply(lambda x: x / np.linalg.norm(x))
 
-    if verbose: print(df.iloc[0]['embedding'])
+    if verbose: print('Sentence embedding shape:', df.iloc[0]['embedding'].shape)
     return df
 
 
-def sentence_camembert(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+def sentence_camembert(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Encoding the sentence using CamemBERT...')
 
     # Copy the dataframe
     df = df.copy()
+
+    # Get the CamemBERT model
+    sentence_camembert_model = pretrained_models['sentence_camembert_model']
 
     # Get the embeddings
     if verbose:
@@ -307,7 +331,7 @@ def sentence_camembert(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     else:
         df['embedding'] = df['text'].apply(lambda x: sentence_camembert_model.encode(x))
 
-    if verbose: print(df.iloc[0]['embedding'].shape)
+    if verbose: print('Sentence embedding shape:', df.iloc[0]['embedding'].shape)
     return df
 
 
@@ -321,26 +345,27 @@ preprocessing_fn_dict = {
     'carry': carry_on_enhancer_for_trans,
     'trans': translate_en_fr,
     'stop': remove_stopwords,
-    'flaubert': flaubert_encoder,
+    'flaubertSmallCased': flaubert_encoder,
+    'flaubertBaseUncased': flaubert_encoder,
+    'flaubertBaseCased': flaubert_encoder,
+    'flaubertLargeCased': flaubert_encoder,
     'avg': average_word_emb,
     'sum': sum_word_emb,
     'norm': norm_emb,
-    'sentenceCamembert': sentence_camembert,
+    'sentenceCamembertBase': sentence_camembert,
+    'sentenceCamembertLarge': sentence_camembert,
 }
 
 
-def preprocess_train_val_test(recipe_name:str, verbose:bool=False) -> None:
-    # Get the recipe
-    recipe = config['recipes'][recipe_name]
-
+def preprocess_train_val_test(pretrained_models: dict, recipe:dict, verbose:bool=False) -> None:
     # Load the dataset
     dataset = load_dataset(path='clinc_oos', name=recipe['clinc150_version'])
 
     # List the preprocessing functions to apply
-    preprocessing_fn_shortnames = recipe['training_data_prep'] + recipe['training_inference_data_prep']
+    prep_fn_shorts = recipe['training_data_prep'] + recipe['training_inference_data_prep']
 
     # Create the folder name
-    folder_name = os.path.join('data', '_'.join(preprocessing_fn_shortnames))
+    folder_name = os.path.join('data', '_'.join(prep_fn_shorts))
 
     for split in ['train', 'validation', 'test']:
         if verbose: print(f'\n> Preprocessing the {split} set...')
@@ -355,12 +380,14 @@ def preprocess_train_val_test(recipe_name:str, verbose:bool=False) -> None:
         # Apply the preprocessing functions and save the intermediate dataframes 
         # by concatenating the short names of the preprocessing functions that happened until now
         concat_short_names = f'{split}'
-        for preprocessing_fn_name in preprocessing_fn_shortnames:
+        for preprocessing_fn_name in prep_fn_shorts:
             concat_short_names = '_'.join([concat_short_names, preprocessing_fn_name])
             
             # Apply the preprocessing function if the file does not exist
             if not os.path.exists(os.path.join(dataset_folder, f'{concat_short_names}.pkl')):
-                df = preprocessing_fn_dict[preprocessing_fn_name](df, verbose=verbose)
+                df = preprocessing_fn_dict[preprocessing_fn_name](df=df,
+                                                                  pretrained_models=pretrained_models,
+                                                                  verbose=verbose)
                 df.to_pickle(os.path.join(dataset_folder, f'{concat_short_names}.pkl'))
             
             # Load the dataframe if the file already exists
@@ -370,9 +397,27 @@ def preprocess_train_val_test(recipe_name:str, verbose:bool=False) -> None:
 
 
 if __name__ == '__main__':
+    # Parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--recipe', '-p', type=str, help='The recipe to use.')
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print the logs or not.')
     args = parser.parse_args()
 
-    preprocess_train_val_test(args.recipe, args.verbose)
+    # Get the config
+    config = parse_config('config.yaml')
+
+    # Get the recipe
+    recipe = config['recipes'][args.recipe]
+
+    # Get the preprocessing function short names
+    prep_fn_shorts = recipe['training_data_prep'] + recipe['training_inference_data_prep']
+
+    # Load pretrained models
+    pretrained_models_dict = load_pretrained_models(prep_fn_shorts=prep_fn_shorts,
+                                                    config=config)
+
+    # Preprocess the data
+    preprocess_train_val_test(pretrained_models=pretrained_models_dict,
+                              recipe=recipe,
+                              config=config,
+                              verbose=args.verbose)

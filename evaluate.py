@@ -8,8 +8,9 @@ import datetime
 
 from sklearn.metrics import confusion_matrix, classification_report
 
-from src.helper import parse_config
-from src.predict import get_model_preprocessingFns, predict
+from src.helper import parse_config, get_model_name_from_recipe
+from src.preprocess import load_pretrained_models
+from src.predict import get_model_and_prep_fn_shorts, predict
 from src.predict_en import get_en_model_tokenizer_trans, predict_en
 
 
@@ -40,11 +41,15 @@ def evaluate(model_name: str, test_path: str, eval_name: str, config: dict, verb
     label_enc = pickle.load(open(os.path.join('model_zoo', 'label_encoder.pkl'), 'rb'))
 
     if model_name != 'en':
-        model, preprocessing_fn_names = get_model_preprocessingFns(model_name, config)
+        model, prep_fn_shorts = get_model_and_prep_fn_shorts(model_name, config)
+        pretrained_models = load_pretrained_models(prep_fn_shorts=prep_fn_shorts,
+                                                   config=config,
+                                                   verbose=verbose)
         y_pred, _ = predict(model=model,
                             label_enc=label_enc,
-                            prep_fn_names=preprocessing_fn_names,
+                            prep_fn_names=prep_fn_shorts,
                             df=df_test,
+                            pretrained_models=pretrained_models,
                             config=config,
                             verbose=verbose)
         
@@ -86,17 +91,22 @@ def evaluate(model_name: str, test_path: str, eval_name: str, config: dict, verb
     
     return
 
+
 if __name__ == '__main__':
+    # Parse arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model', type=str, default=None, help='The model to use for inference.')
+    parser.add_argument('--test_path', type=str, default='data/examples.csv', help='The test set csv file to use for evaluation.')
+    parser.add_argument('--eval_name', type=str, default='example_set', help='The name of the evaluation folder.')
+    parser.add_argument('--verbose', action='store_true', help='Whether to print the translated sentence.')
+    args = parser.parse_args()
+
     # Get the config
     config = parse_config("config.yaml")
 
-    # Parse arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, help='The model to use for inference.')
-    parser.add_argument('--test_path', type=str, help='The test set csv file to use for evaluation.')
-    parser.add_argument('--eval_name', type=str, help='The name of the evaluation folder.')
-    parser.add_argument('--verbose', action='store_true', help='Whether to print the translated sentence.')
-    args = parser.parse_args()
+    # Take the best model if no model is specified
+    if args.model is None:
+        args.model = get_model_name_from_recipe(config['recipes'][config['best_recipe']])
 
     # Evaluate the model
     evaluate(model_name=args.model,
