@@ -64,6 +64,17 @@ recipes: {
     training_inference_data_prep: ['sentenceCamembertBase'],
     add_val: True,
     model_type: "logReg"
+  },
+
+    camembert_large: {
+    clinc150_version: "plus",
+    training_data_prep: ['oos1',
+                          'down',
+                          'carry',
+                          'trans'],
+    training_inference_data_prep: ['sentenceCamembertLarge'],
+    add_val: True,
+    model_type: "logReg"
   }
 }
 

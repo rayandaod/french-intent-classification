@@ -20,6 +20,12 @@ def train(recipe: dict, config: dict, verbose: bool = False) -> None:
     train_data_path = os.path.join('data', dataset_folder_name, recipe['clinc150_version'], 'train', f'train_{dataset_folder_name}.pkl')
     train_df = pd.read_pickle(train_data_path)
 
+    # If specified, add the validation data to the training data
+    if recipe['add_val']:
+        val_data_path = os.path.join('data', dataset_folder_name, recipe['clinc150_version'], 'validation', f'validation_{dataset_folder_name}.pkl')
+        val_df = pd.read_pickle(val_data_path)
+        train_df = pd.concat([train_df, val_df], ignore_index=True)
+
     # Get the embedding vectors and labels
     X = np.array(train_df['embedding'].tolist())
     y = train_df['label']

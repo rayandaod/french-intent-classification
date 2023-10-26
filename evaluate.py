@@ -41,6 +41,7 @@ def evaluate(model_name: str, test_path: str, eval_name: str, config: dict, verb
     # Get the label encoder
     label_enc = pickle.load(open(os.path.join('model_zoo', 'label_encoder.pkl'), 'rb'))
 
+    # If the model is not the English model
     if model_name != 'en':
         model, prep_fn_shorts = get_model_and_prep_fn_shorts(model_name, config)
         pretrained_models = load_pretrained_models(prep_fn_shorts=prep_fn_shorts,
@@ -59,6 +60,7 @@ def evaluate(model_name: str, test_path: str, eval_name: str, config: dict, verb
         # Get the true labels and encode them
         y_true = label_enc.fit_transform(df_test['label'])
         
+    # If the model is the English model
     else:
         model, tokenizer, translator = get_en_model_tokenizer_trans(config, verbose=verbose)
 
