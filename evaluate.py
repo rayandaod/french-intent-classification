@@ -28,7 +28,7 @@ def evaluate(model_name: str, test_path: str, eval_name: str, verbose: bool=Fals
         None
     """
     # Get the model path
-    model_path = os.path.join('model_zoo', model_name)
+    model_path = os.path.join('model_zoo', f'eval_{model_name}_set')
 
     # Create the evaluation folder
     eval_path = os.path.join(model_path, eval_name)

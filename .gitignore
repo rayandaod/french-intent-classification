@@ -1,14 +1,17 @@
-# Draft notebook
+# Ignore draft notebook
 draft.ipynb
 
-# Data
-**/CLINC150*
+# Ignore data
+**/data/*
 nltk_data/
 
-# Keep every .gitkeep file
-!.gitkeep
-
-# Undesired file types
+# Ignore undesired file types
 *.DS_Store
 **/.ipynb_checkpoints
 **/*.pyc
+
+# Keep examples.csv
+!examples.csv
+
+# Keep every .gitkeep file
+!.gitkeep

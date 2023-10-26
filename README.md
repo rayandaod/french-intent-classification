@@ -128,18 +128,20 @@ They are indeed similar, so we can use the CLINC150 dataset to train our models.
 
 ## About the data preprocessing
 
-I identified the following steps to preprocess the data before training the models or running inference. They are implemented in the `src/preprocess.py` file, and the chosen pipeline can be specified in `config.yaml`:
+I identified the following steps to preprocess the data before training the models or running inference. They are implemented in the `src/preprocess.py` file, and the chosen recipe can be specified in `config.yaml`:
 - Handle the *out_of_scope* class
-  - `oos_strat_1`: all the classes except the ones of interest are considered as *out_of_scope*
-  - `oos_strat_2`: only the original *out_of_scope* class is considered as *out_of_scope*. The classes we are not interested in are removed
-  - `oos_strat_3`: only keep the classes of interest, and return *out_of_scope* based on a threshold (e.g if the model is not confident enough)
-- `downsample_oos`: Downsample the out_of_scope class if needed
-- `carry_on_enhancer_for_trans`: Enhance the carry_on class for translation to french. This is needed because the translation model is not very good at translating this class - I noticed that "carry on" is often translated to "continuer" (which is not the meaning we want here). Therefore, I replaced "carry on" by "carry on luggage", or "carry on bag", ... in the training data.
-- `translate_en_fr`: Translate the dataset to french
-- `remove_stopwords`: Remove stopwords if using word embeddings
+  - `oos1`: all the classes except the ones of interest are considered as *out_of_scope*
+  - `oss2`: only the original *out_of_scope* class is considered as *out_of_scope*. The classes we are not interested in are removed
+  - `oos3`: only keep the classes of interest, and return *out_of_scope* based on a threshold (e.g if the model is not confident enough)
+- `down`: Downsample the *out_of_scope* class if needed
+- `carry`: Enhance the carry_on class for translation to french. This is needed because the translation model is not very good at translating this class - I noticed that "carry on" is often translated to "continuer" (which is not the meaning we want here). Therefore, I replaced "carry on" by "carry on luggage", or "carry on bag", ... in the training data.
+- `trans`: Translate the dataset to french
+- `stop`: Remove stopwords if using word embeddings
 - Compute embeddings
-  - `flaubert_emb`: Either compute individual word embeddings (using FlauBERT) and `merge_word_emb`: sum/average them to get a sentence embedding
-  - `sentence_camembert`: Or use sentence embeddings (using Sentence CamemBERT)
+  - `flaubert`: Either compute individual word embeddings (using FlauBERT)
+  - `sentenceCamembert`: Or use sentence embeddings (using Sentence CamemBERT)
+- `avg`: Merge the word embeddings by averagoing them
+- `sum`: Merge the word embeddings by summing them
 
 The above keywords can be combined in `training_data_prep` (preprocessing applied to the training data only) and `training_inference_data_prep` (preprocessing applied to training **and** inference) to specify the pipeline.
 

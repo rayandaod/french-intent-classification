@@ -6,7 +6,7 @@ import torch
 import pandas as pd
 import nltk
 import numpy as np
-import ast
+import argparse
 
 from transformers import FlaubertModel, FlaubertTokenizer
 from transformers import pipeline
@@ -17,14 +17,15 @@ from tqdm import tqdm
 
 from src.helper import parse_config
 
-# TODO: Add comments to functions
-
 # Get the config
 config = parse_config("/Users/rayandaod/Documents/Docs/Job Search/ILLUIN/intent_classification/config.yaml")
 
+# Set random seed
+np.random.seed(config['random_state'])
+
 # Get the stopwords from nltk
 if config['verbose']: print('\n> Gathering french stopwords...')
-nltk_path = '/Users/rayandaod/Documents/Docs/Job Search/ILLUIN/intent_classification/data/nltk_data'
+nltk_path = '/Users/rayandaod/Documents/Docs/Job Search/ILLUIN/intent_classification/data/_nltk_data'
 if not os.path.exists(nltk_path):
     nltk.download('stopwords', download_dir=nltk_path)
 nltk.data.path.append(nltk_path)
@@ -169,8 +170,12 @@ def translate_en_fr(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     translator = pipeline("translation", model=config['translation_en_fr_model_path'])
 
     # Translate the text from English to French
-    tqdm.pandas()
-    df['text_fr'] = df['text'].progress_apply(lambda x: translator(x)[0]['translation_text'])
+    translator_fn = lambda x: translator(x)[0]['translation_text']
+    if verbose:
+        tqdm.pandas()
+        df['text_fr'] = df['text'].progress_apply(translator_fn)
+    else:
+        df['text_fr'] = df['text'].apply(translator_fn)
 
     # Rename the text column to text_en and the text_fr column to text
     df = df.rename(columns={'text': 'text_en'})
@@ -202,25 +207,28 @@ def flaubert_encoder(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
 
     # Tokenize each row
     # Use tqdm to display a progress bar, only if verbose is True
+    flaubert_tokenizer_fn = lambda x: flaubert_tokenizer.tokenize(x)
     if verbose:
         tqdm.pandas()
-        df['token'] = df['text'].progress_apply(lambda x: flaubert_tokenizer.tokenize(x))
+        df['token'] = df['text'].progress_apply(flaubert_tokenizer_fn)
     else:
-        df['token'] = df['text'].apply(lambda x: flaubert_tokenizer.tokenize(x))
+        df['token'] = df['text'].apply(flaubert_tokenizer_fn)
 
     # Convert the tokens to ids
     # Use tqdm to display a progress bar, only if verbose is True
+    flaubert_token_to_id_fn = lambda x: flaubert_tokenizer.convert_tokens_to_ids(x)
     if verbose:
-        df['token_id'] = df['token'].progress_apply(lambda x: flaubert_tokenizer.convert_tokens_to_ids(x))
+        df['token_id'] = df['token'].progress_apply(flaubert_token_to_id_fn)
     else:
-        df['token_id'] = df['token'].apply(lambda x: flaubert_tokenizer.convert_tokens_to_ids(x))
+        df['token_id'] = df['token'].apply(flaubert_token_to_id_fn)
 
     # Get the embeddings
     # Use tqdm to display a progress bar, only if verbose is True
+    flaubert_fn = lambda x: flaubert(torch.tensor([x], dtype=torch.long))[0][0].detach().numpy()
     if verbose:
-        df['word_embeddings'] = df['token_id'].progress_apply(lambda x: flaubert(torch.tensor([x], dtype=torch.long))[0][0].detach().numpy())
+        df['word_embeddings'] = df['token_id'].progress_apply(flaubert_fn)
     else:
-        df['word_embeddings'] = df['token_id'].apply(lambda x: flaubert(torch.tensor([x], dtype=torch.long))[0][0].detach().numpy())
+        df['word_embeddings'] = df['token_id'].apply(flaubert_fn)
 
     # Remove the token and token_id columns
     df = df.drop(['token', 'token_id'], axis=1)
@@ -229,24 +237,18 @@ def flaubert_encoder(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     return df
 
 
-def merge_word_emb(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
-    if verbose: print('\n> Merging the word embeddings...')
+def average_word_emb(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+    if verbose: print('\n> Averaging the word embeddings...')
 
-    # Get the config params to obtain final embedding
-    aggregate_type = config['flaubert_aggregate_type']
-    normalize = config['flaubert_normalize_embedding']
+    # Copy the dataframe
+    df = df.copy()
 
-    # Aggregate the embeddings
-    if aggregate_type == 'avg':
-        df['embedding'] = df['word_embeddings'].apply(lambda x: np.mean(x, axis=0))
-    elif aggregate_type == 'sum':
-        df['embedding'] = df['word_embeddings'].apply(lambda x: np.sum(x, axis=0))
+    # Get the embeddings
+    if verbose:
+        tqdm.pandas()
+        df['embedding'] = df['word_embeddings'].progress_apply(lambda x: np.mean(x, axis=0))
     else:
-        raise ValueError(f'Invalid aggregate type: {aggregate_type}')
-    
-    # Normalize the embedding
-    if normalize:
-        df['embedding'] = df['embedding'].apply(lambda x: x / np.linalg.norm(x))
+        df['embedding'] = df['word_embeddings'].apply(lambda x: np.mean(x, axis=0))
 
     # Remove the word_embeddings column
     df = df.drop('word_embeddings', axis=1)
@@ -255,8 +257,45 @@ def merge_word_emb(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     return df
 
 
+def sum_word_emb(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+    if verbose: print('\n> Summing the word embeddings...')
+
+    # Copy the dataframe
+    df = df.copy()
+
+    # Get the embeddings
+    if verbose:
+        tqdm.pandas()
+        df['embedding'] = df['word_embeddings'].progress_apply(lambda x: np.sum(x, axis=0))
+    else:
+        df['embedding'] = df['word_embeddings'].apply(lambda x: np.sum(x, axis=0))
+
+    # Remove the word_embeddings column
+    df = df.drop('word_embeddings', axis=1)
+
+    if verbose: print(df.iloc[0]['embedding'].shape)
+    return df
+
+
+def norm_emb(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
+    if verbose: print('\n> Normalizing the embedding...')
+
+    # Copy the dataframe
+    df = df.copy()
+
+    # Get the embeddings
+    if verbose:
+        tqdm.pandas()
+        df['embedding'] = df['embedding'].progress_apply(lambda x: x / np.linalg.norm(x))
+    else:
+        df['embedding'] = df['embedding'].apply(lambda x: x / np.linalg.norm(x))
+
+    if verbose: print(df.iloc[0]['embedding'])
+    return df
+
+
 def sentence_camembert(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
-    if verbose: print('\n> Encoding each sentence using CamemBERT...')
+    if verbose: print('\n> Encoding the sentence using CamemBERT...')
 
     # Copy the dataframe
     df = df.copy()
@@ -268,84 +307,72 @@ def sentence_camembert(df:pd.DataFrame, verbose:bool=False) -> pd.DataFrame:
     else:
         df['embedding'] = df['text'].apply(lambda x: sentence_camembert_model.encode(x))
 
-    if verbose: print(df.iloc[0]['embedding'])
+    if verbose: print(df.iloc[0]['embedding'].shape)
     return df
 
 
 # Store the preprocessing function references in a dictionary
 # Each of these functions takes a dataframe as input and returns a dataframe as output
-flaubert_agg_type = config['flaubert_aggregate_type']
-flaubert_norm_emb = config['flaubert_normalize_embedding']
 preprocessing_fn_dict = {
-    'oos_strat_1': (oos_strat_1, 'oos1'),
-    'oos_strat_2': (oos_strat_2, 'oos2'),
-    'oos_strat_3': (oos_strat_3, 'oos3'),
-    'downsample_oos': (downsample_oos, 'down'),
-    'carry_on_enhancer_for_trans': (carry_on_enhancer_for_trans, 'carry'),
-    'translate_en_fr': (translate_en_fr, 'trans'),
-    'remove_stopwords': (remove_stopwords, 'stop'),
-    'flaubert_emb': (flaubert_encoder, 'flaubert'),
-    'merge_word_emb': (merge_word_emb, f"{flaubert_agg_type}{'_norm' if flaubert_norm_emb else ''}"),
-    'sentence_camembert': (sentence_camembert, f'sentenceCamembert{config["sentence_camembert_model_path"].split("-")[-1].capitalize()}'),
+    'oos1': oos_strat_1,
+    'oos2': oos_strat_2,
+    'oos3': oos_strat_3,
+    'down': downsample_oos,
+    'carry': carry_on_enhancer_for_trans,
+    'trans': translate_en_fr,
+    'stop': remove_stopwords,
+    'flaubert': flaubert_encoder,
+    'avg': average_word_emb,
+    'sum': sum_word_emb,
+    'norm': norm_emb,
+    'sentenceCamembert': sentence_camembert,
 }
 
 
-def preprocess_train_test_val(dataset_name:str, verbose:bool=False) -> None:
+def preprocess_train_val_test(recipe_name:str, verbose:bool=False) -> None:
+    # Get the recipe
+    recipe = config['recipes'][recipe_name]
+
     # Load the dataset
-    clinc150_dataset = load_dataset(path='clinc_oos', name=dataset_name)
+    dataset = load_dataset(path='clinc_oos', name=recipe['clinc150_version'])
 
     # List the preprocessing functions to apply
-    preprocessing_pipeline = config['training_data_prep'] + config['training_inference_data_prep']
-
-    # For each element of the preprocessing pipeline, map to the short name of the preprocessing function
-    preprocessing_pipeline_short = [preprocessing_fn_dict[preprocessing_fn][1] for preprocessing_fn in preprocessing_pipeline]
+    preprocessing_fn_shortnames = recipe['training_data_prep'] + recipe['training_inference_data_prep']
 
     # Create the folder name
-    folder_name = config['clinc150_folder_local_path'] + '_' + '_'.join(preprocessing_pipeline_short)
+    folder_name = os.path.join('data', '_'.join(preprocessing_fn_shortnames))
 
     for split in ['train', 'validation', 'test']:
         if verbose: print(f'\n> Preprocessing the {split} set...')
 
-        # Create dataset folder
-        dataset_folder = os.path.join(folder_name, dataset_name, split)
+        # Create dataset folder if it does not exist
+        dataset_folder = os.path.join(folder_name, recipe['clinc150_version'], split)
         os.makedirs(dataset_folder, exist_ok=True)
 
         # Load and prepare the split
-        df = load_clinc150_dataset_split(clinc150_dataset, split=split, verbose=verbose)
+        df = load_clinc150_dataset_split(dataset, split=split, verbose=verbose)
 
-        # Apply the preprocessing pipeline and save the intermediate dataframes by concatenating the short names of the preprocessing functions that happened until now
+        # Apply the preprocessing functions and save the intermediate dataframes 
+        # by concatenating the short names of the preprocessing functions that happened until now
         concat_short_names = f'{split}'
-        for preprocessing_fn_name in preprocessing_pipeline:
-            concat_short_names = '_'.join([concat_short_names, preprocessing_fn_dict[preprocessing_fn_name][1]])
+        for preprocessing_fn_name in preprocessing_fn_shortnames:
+            concat_short_names = '_'.join([concat_short_names, preprocessing_fn_name])
+            
+            # Apply the preprocessing function if the file does not exist
             if not os.path.exists(os.path.join(dataset_folder, f'{concat_short_names}.pkl')):
-                df = preprocessing_fn_dict[preprocessing_fn_name][0](df, verbose=verbose)
+                df = preprocessing_fn_dict[preprocessing_fn_name](df, verbose=verbose)
                 df.to_pickle(os.path.join(dataset_folder, f'{concat_short_names}.pkl'))
+            
+            # Load the dataframe if the file already exists
             elif verbose:
                 print(f'\nFile {concat_short_names}.pkl already exists, skipping...')
                 df = pd.read_pickle(os.path.join(dataset_folder, f'{concat_short_names}.pkl'))
 
 
 if __name__ == '__main__':
-    # print('TRAINING DATA PREPROCESSING PIPELINE EXAMPLE:')
-    # training_example = "help me book a place to stay from may 2 to may 4 in tampa"
-    # training_example_label = "book_hotel"
-    # train_df = pd.DataFrame([[training_example, training_example_label]], columns=['text', 'label'])
-    # print(f"\n> Training example")
-    # print(train_df.iloc[0])
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--recipe', '-p', type=str, help='The recipe to use.')
+    parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print the logs or not.')
+    args = parser.parse_args()
 
-    # preprocessing_pipeline = ['oos_strat_3', 'translate_en_fr', 'remove_stopwords', 'flaubert_emb']
-    # for preprocessing_fn_name in preprocessing_pipeline:
-    #     train_df = preprocessing_fn_dict[preprocessing_fn_name][0](train_df, verbose=config['verbose'])
-    # print()
-
-    # print('INFERENCE DATA PREPROCESSING PIPELINE EXAMPLE:')
-    # user_input = "Localiser les bagages perdus de Flight America Airlines à O'Hare"
-    # user_input_df = pd.DataFrame([user_input], columns=['text'])
-    # print(f"\n> User input")
-    # print(user_input_df.iloc[0]['text'])
-
-    # preprocessing_pipeline = ['remove_stopwords', 'flaubert_emb']
-    # for preprocessing_fn_name in preprocessing_pipeline:
-    #     user_input_df = preprocessing_fn_dict[preprocessing_fn_name][0](user_input_df, verbose=config['verbose'])
-
-    preprocess_train_test_val(config['clinc150_dataset_name'], verbose=config['verbose'])
+    preprocess_train_val_test(args.recipe, args.verbose)
