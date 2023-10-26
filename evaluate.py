@@ -12,13 +12,15 @@ from sklearn.metrics import confusion_matrix, classification_report
 from src.helper import parse_config, get_model_name_from_recipe
 from src.preprocess import load_pretrained_models
 from src.predict import get_model_and_prep_fn_shorts, predict
-from src.predict_en import get_en_model_tokenizer_trans, predict_en
+from src.predict_english import get_en_model_tokenizer_trans, predict_en
 
 
-def evaluate(model_name: str, test_path: str, eval_name: str, config: dict, verbose: bool=False) -> None:
+def evaluate(recipe_name: str, model_name: str, test_path: str, eval_name: str,
+             config: dict, verbose: bool=False) -> None:
     """Evaluate a model on a test set.
 
     Args:
+        recipe_name (str): The name of the recipe to use for training.
         model_name (str): The name of the model to use for inference.
         test_path (str): The path to the test set csv file.
         eval_name (str): The name of the evaluation folder.
@@ -42,7 +44,7 @@ def evaluate(model_name: str, test_path: str, eval_name: str, config: dict, verb
     label_enc = pickle.load(open(os.path.join('model_zoo', 'label_encoder.pkl'), 'rb'))
 
     # If the model is not the English model
-    if model_name != 'en':
+    if model_name != 'english':
         model, prep_fn_shorts = get_model_and_prep_fn_shorts(model_name, config)
         pretrained_models = load_pretrained_models(prep_fn_shorts=prep_fn_shorts,
                                                    config=config,
@@ -118,14 +120,12 @@ if __name__ == '__main__':
     # Get the config
     config = parse_config("config.yaml")
 
-    # Take the best model if no model is specified
-    if args.recipe is None:
-        model_name = get_model_name_from_recipe(config['recipes'][config['best_recipe']])
-    else:
-        model_name = get_model_name_from_recipe(config['recipes'][args.recipe])
+    # Get the model name
+    model_name = get_model_name_from_recipe(args.recipe, config)
 
     # Evaluate the model
-    evaluate(model_name=model_name,
+    evaluate(recipe_name=args.recipe,
+             model_name=model_name,
              test_path=args.test_path,
              eval_name=args.eval_name,
              config=config,

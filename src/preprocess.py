@@ -22,6 +22,13 @@ def load_pretrained_models(prep_fn_shorts: list, config:dict, verbose: bool=Fals
     # Set random seed
     np.random.seed(config['random_state'])
 
+    # Create a translation pipeline
+    if 'trans' in prep_fn_shorts:
+        if verbose: print('\n> Creating a translation pipeline...')
+        translator = pipeline("translation", model=config['translator_en_fr_model_path'])
+    else:
+        translator = None
+
     # Get the stopwords from nltk
     if 'stop' in prep_fn_shorts:
         if verbose: print('\n> Gathering french stopwords...')
@@ -56,6 +63,7 @@ def load_pretrained_models(prep_fn_shorts: list, config:dict, verbose: bool=Fals
         sentence_camembert_model = None
 
     return {
+        'translator_en_fr': translator,
         'french_stopwords': french_stopwords,
         'flaubert_tokenizer': flaubert_tokenizer,
         'flaubert': flaubert,
@@ -183,11 +191,8 @@ def translate_en_fr(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False
     # Copy the dataframe
     df = df.copy()
 
-    # Create a translation pipeline
-    translator = pipeline("translation", model=config['translation_en_fr_model_path'])
-
     # Translate the text from English to French
-    translator_fn = lambda x: translator(x)[0]['translation_text']
+    translator_fn = lambda x: pretrained_models['translator_en_fr'](x)[0]['translation_text']
     if verbose:
         tqdm.pandas()
         df['text_fr'] = df['text'].progress_apply(translator_fn)
@@ -367,14 +372,11 @@ def preprocess_train_val_test(pretrained_models: dict, recipe:dict, config: dict
     # List the preprocessing functions to apply
     prep_fn_shorts = recipe['training_data_prep'] + recipe['training_inference_data_prep']
 
-    # Create the folder name
-    folder_name = os.path.join('data', '_'.join(prep_fn_shorts))
-
-    for split in ['train', 'validation', 'test']:
+    for split in ['train', 'validation']:
         if verbose: print(f'\n> Preprocessing the {split} set...')
 
         # Create dataset folder if it does not exist
-        dataset_folder = os.path.join(folder_name, recipe['clinc150_version'], split)
+        dataset_folder = os.path.join('data', recipe['clinc150_version'], split)
         os.makedirs(dataset_folder, exist_ok=True)
 
         # Load and prepare the split
@@ -383,10 +385,16 @@ def preprocess_train_val_test(pretrained_models: dict, recipe:dict, config: dict
         # Apply the preprocessing functions and save the intermediate dataframes 
         # by concatenating the short names of the preprocessing functions that happened until now
         concat_short_names = f'{split}'
+
+        # Save the dataframe before any preprocessing
+        if not os.path.exists(os.path.join(dataset_folder, f'{concat_short_names}.pkl')):
+            df.to_pickle(os.path.join(dataset_folder, f'{concat_short_names}.pkl'))
+
+        # Apply the preprocessing functions
         for preprocessing_fn_name in prep_fn_shorts:
             concat_short_names = '_'.join([concat_short_names, preprocessing_fn_name])
             
-            # Apply the preprocessing function if the file does not exist
+            # Apply the preprocessing function if the file does not already exist
             if not os.path.exists(os.path.join(dataset_folder, f'{concat_short_names}.pkl')):
                 df = preprocessing_fn_dict[preprocessing_fn_name](df=df,
                                                                   pretrained_models=pretrained_models,

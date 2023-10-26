@@ -76,7 +76,7 @@ def prepare_and_predict(model_name: str, user_input: str, config: dict, verbose:
 if __name__ == '__main__':
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', '-m', type=str, default=None, help='The name of the model to use for inference.')
+    parser.add_argument('--recipe', '-r', type=str, default=None, help='The name of the recipe to use for inference.')
     parser.add_argument('--text', '-t', type=str, help='The text to predict the intent of.')
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print logs.')
     args = parser.parse_args()
@@ -84,12 +84,11 @@ if __name__ == '__main__':
     # Get the config
     config = parse_config("config.yaml")
 
-    # Take the best model if no model is specified
-    if args.model is None:
-        args.model = get_model_name_from_recipe(config['recipes'][config['best_recipe']])
+    # Get the model name
+    model_name = get_model_name_from_recipe(args.recipe, config)
 
     # Predict
-    prediction, speed = prepare_and_predict(model_name=args.model,
+    prediction, speed = prepare_and_predict(model_name=model_name,
                                             user_input=args.text,
                                             config=config,
                                             verbose=args.verbose)

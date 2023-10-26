@@ -39,6 +39,9 @@ sentence_camembert_model_paths: {
   sentenceCamembertLarge: "dangvantuan/sentence-camembert-large"
 }
 
+# Propotion of OOS examples in the training set compared to the in-domain examples
+proportion_oos: 2.5
+
 # Recipes
 recipes: {
 
@@ -107,7 +110,17 @@ recipes: {
     model_type: "logReg"
   },
 
-    camembert_large: {
+  camembert_noCarry: {
+    clinc150_version: "plus",
+    training_data_prep: ['oos1',
+                          'down',
+                          'trans'],
+    training_inference_data_prep: ['sentenceCamembertBase'],
+    add_val: True,
+    model_type: "logReg"
+  },
+
+  camembert_large: {
     clinc150_version: "plus",
     training_data_prep: ['oos1',
                           'down',

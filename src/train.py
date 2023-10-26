@@ -11,18 +11,21 @@ from sklearn.linear_model import LogisticRegression
 from src.helper import *
 
 
-def train(recipe: dict, config: dict, verbose: bool = False) -> None:
+def train(recipe_name: str, config: dict, verbose: bool = False) -> None:
+    # Get the recipe
+    recipe = config['recipes'][recipe_name]
+
     # Get the dataset folder name from the data preprocessing function short names
     prep_fn_shorts = recipe['training_data_prep'] + recipe['training_inference_data_prep']
     dataset_folder_name = '_'.join(prep_fn_shorts)
 
     # Get the training data
-    train_data_path = os.path.join('data', dataset_folder_name, recipe['clinc150_version'], 'train', f'train_{dataset_folder_name}.pkl')
+    train_data_path = os.path.join('data', recipe['clinc150_version'], 'train', f'train_{dataset_folder_name}.pkl')
     train_df = pd.read_pickle(train_data_path)
 
     # If specified, add the validation data to the training data
     if recipe['add_val']:
-        val_data_path = os.path.join('data', dataset_folder_name, recipe['clinc150_version'], 'validation', f'validation_{dataset_folder_name}.pkl')
+        val_data_path = os.path.join('data', recipe['clinc150_version'], 'validation', f'validation_{dataset_folder_name}.pkl')
         val_df = pd.read_pickle(val_data_path)
         train_df = pd.concat([train_df, val_df], ignore_index=True)
 
@@ -40,9 +43,9 @@ def train(recipe: dict, config: dict, verbose: bool = False) -> None:
     model = LogisticRegression(random_state=config['random_state'], max_iter=1000)
     model.fit(X, y)
 
-    # Save the classifier and the label encoder
+    # Save the model and the label encoder
     if verbose: print(f'\n> Saving the model in model_zoo/{model_type}_on_{recipe["clinc150_version"].upper()}_{dataset_folder_name}/model.pkl...')
-    model_folder_name = model_type + '_on_' + recipe['clinc150_version'].upper() + '_' + dataset_folder_name
+    model_folder_name = model_type + '_on_' + recipe_name
     model_path = f'model_zoo/{model_folder_name}'
     os.makedirs(model_path, exist_ok=True)
     pickle.dump(model, open(f'{model_path}/model.pkl', 'wb'))
@@ -65,8 +68,5 @@ if __name__ == '__main__':
     # Get the config
     config = parse_config("config.yaml")
 
-    # Get the recipe
-    recipe = config['recipes'][args.recipe]
-
     # Train
-    train(recipe=recipe, config=config, verbose=args.verbose)
+    train(recipe_name=args.recipe, config=config, verbose=args.verbose)

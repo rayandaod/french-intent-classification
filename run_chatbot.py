@@ -6,7 +6,7 @@ import pickle
 
 from src.preprocess import load_pretrained_models
 from src.predict import predict, get_model_and_prep_fn_shorts
-from src.predict_en import predict_en, get_en_model_tokenizer_trans
+from src.predict_english import predict_en, get_en_model_tokenizer_trans
 from src.helper import *
 
 parser = argparse.ArgumentParser()

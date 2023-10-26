@@ -124,18 +124,22 @@ The results are averaged over the entire dataset.
 - We don't have a balanced nor large enough test set for evaluation -> Find a larger and balanced dataset for evaluation.
   - Idea: take the CLINC150 dataset and translate it to french. Then take a french language model and fine-tune it on the classes of interest. Pros: no translation needed at inference time.
 
-## About the dataset
+## About the datasets
+
+### Examples dataset
 
 I was given a csv file (`data/ILLUIN/examples.csv`) containing some examples of user inputs and their corresponding class. However, this dataset is way too small and imbalanced to train a model and will only serve as an example set:
 
 ![Examples class distribution](_readme_assets/examples_class_distrib.png)
 
-Therefore, I looked for a larger dataset. Naturally, I chose the [CLINC150 dataset](https://github.com/clinc/oos-eval), which consists in 150 classes (intents) over 10 domains and includs the 8 classes we are interested in. The dataset also contains one label for *out-of-scope* intent. It has three available versions:
+### CLINC150 dataset
+
+I looked for a larger dataset. Naturally, I chose the [CLINC150 dataset](https://github.com/clinc/oos-eval), which consists in 150 classes (intents) over 10 domains and includes the 8 classes we are interested in. The dataset also contains one label for *out-of-scope* intent. It has three available versions:
 - *small*: 50 training queries per each in-scope intent
 - *imbalanced*: intents have either 25, 50, 75, or 100 training queries
 - *plus*: 250 out-of-scope training examples, rather than 100
 
-We chose the *plus* version to have more data:
+I chose the *plus* version to have more data:
 
 ![CLINC150 plus class distribution](_readme_assets/clinc_plus_class_distrib.png)
 
@@ -145,7 +149,11 @@ It is also important to check that the CLINC150 dataset contains user inputs of 
 
 ![CLINC150 text length distribution](_readme_assets/clinc_plus_text_len_distrib.png)
 
-They are indeed similar, so we can use the CLINC150 dataset to train our models.
+The CLINC150 dataset text length range covers the examples.csv text length range, so we are good to go.
+
+### About the translation from english to french
+
+TODO
 
 ## About the data preprocessing
 
@@ -165,10 +173,6 @@ I identified the following steps to preprocess the data before training the mode
 - `sum`: Merge the word embeddings by summing them
 
 The above keywords can be combined in `training_data_prep` (preprocessing applied to the training data only) and `training_inference_data_prep` (preprocessing applied to training **and** inference) to specify the pipeline.
-
-## About the translation from english to french
-
-TODO
 
 ## About the english pipeline
 
@@ -199,7 +203,7 @@ The model pre-trained on CLINC150 was chosen based on its popularity. A deeper m
 - [ ] Fine-tune a french language model on translated CLINC150 dataset
 - [ ] Check the licenses of the models used
 - [ ] Complete the readme and comment the code properly
-- [ ] Add a requirements.txt file
+- [x] Add a requirements.txt file
 
 ## 
 If you are working with others, they should also install nbstripout and run nbstripout --install in the repository to ensure that their commits also have the notebook outputs stripped.

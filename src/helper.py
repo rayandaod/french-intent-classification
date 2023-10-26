@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def parse_config(config_path:str) -> dict:
+def parse_config(config_path: str) -> dict:
     """Parse the config.yaml file
 
     Args:
@@ -19,21 +19,29 @@ def parse_config(config_path:str) -> dict:
     return config
 
 
-def get_model_name_from_recipe(recipe: dict) -> str:
+def get_model_name_from_recipe(recipe_name: str, config: dict) -> str:
+    """Get the model name from a recipe.
+
+    Args:
+        recipe (str): The name of the recipe.
+        config (dict): The config.
+
+    Returns:
+        str: The model name.
+    """
+    # Get the recipe
+    if recipe_name is not None:
+        recipe = config['recipes'][recipe_name]
+    else:
+        recipe = config['recipes'][config['best_recipe']]
+
     # Get the model type (logReg, etc.)
     model_type = recipe['model_type']
 
-    # Get the dataset version
-    clinc150_version = recipe['clinc150_version']
-
-    # Get the dataset folder name from the data preprocessing function short names
-    prep_fn_shorts = recipe['training_data_prep'] + recipe['training_inference_data_prep']
-    dataset_folder_name = '_'.join(prep_fn_shorts)
-
-    return f"{model_type}_on_{clinc150_version.upper()}_{dataset_folder_name}"
+    return f"{model_type}_{recipe_name}"
 
 
-def plot_class_distribution(df:pd.DataFrame, title:str, highlighted_classes:list=[]) -> None:
+def plot_class_distribution(df: pd.DataFrame, title: str, highlighted_classes: list=[]) -> None:
     """Plot the class distribution of a dataframe.
 
     Args:
