@@ -15,12 +15,11 @@ from src.predict import get_model_and_prep_fn_shorts, predict
 from src.predict_english import get_en_model_tokenizer_trans, predict_en
 
 
-def evaluate(recipe_name: str, model_name: str, test_path: str, eval_name: str,
+def evaluate(model_name: str, test_path: str, eval_name: str,
              config: dict, verbose: bool=False) -> None:
     """Evaluate a model on a test set.
 
     Args:
-        recipe_name (str): The name of the recipe to use for training.
         model_name (str): The name of the model to use for inference.
         test_path (str): The path to the test set csv file.
         eval_name (str): The name of the evaluation folder.
@@ -127,8 +126,7 @@ if __name__ == '__main__':
         model_name = 'english'
 
     # Evaluate the model
-    evaluate(recipe_name=args.recipe,
-             model_name=model_name,
+    evaluate(model_name=model_name,
              test_path=args.test_path,
              eval_name=args.eval_name,
              config=config,

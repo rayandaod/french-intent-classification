@@ -7,6 +7,8 @@ import pickle
 import numpy as np
 
 from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
+
 
 from src.helper import *
 
@@ -40,12 +42,15 @@ def train(recipe_name: str, config: dict, verbose: bool = False) -> None:
     # Train the model
     if verbose: print('\n> Training the model...')
     model_type = recipe['model_type']
-    model = LogisticRegression(random_state=config['random_state'], max_iter=1000)
+    if model_type == 'logReg':
+        model = LogisticRegression(random_state=config['random_state'], max_iter=1000)
+    elif model_type == 'mlp':
+        model = MLPClassifier(random_state=config['random_state'])
     model.fit(X, y)
 
     # Save the model and the label encoder
     if verbose: print(f'\n> Saving the model in model_zoo/{model_type}_on_{recipe["clinc150_version"].upper()}_{dataset_folder_name}/model.pkl...')
-    model_folder_name = model_type + '_on_' + recipe_name
+    model_folder_name = model_type + '_' + recipe_name
     model_path = f'model_zoo/{model_folder_name}'
     os.makedirs(model_path, exist_ok=True)
     pickle.dump(model, open(f'{model_path}/model.pkl', 'wb'))

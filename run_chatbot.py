@@ -14,24 +14,24 @@ parser = argparse.ArgumentParser()
 
 if __name__ == '__main__':
     # Parse arguments
-    parser.add_argument('--model', '-m', type=str, default=None, help='The model to use for inference.')
-    parser.add_argument('--verbose', '-v', type=bool, default=False, help='Whether to print the logs or not.')
+    parser.add_argument('--recipe', '-r', type=str, default=None, help='The recipe of the model to use for inference.')
+    parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print logs.')
     args = parser.parse_args()
 
     # Get the config
     config = parse_config("config.yaml")
 
-    # Take the best model if no model is specified
-    if args.model is None:
-        args.model = get_model_name_from_recipe(config['recipes'][config['best_recipe']])
+    # Get the model name
+    model_name = get_model_name_from_recipe(recipe_name=args.recipe,
+                                            config=config)
 
-    if args.model != 'en':
+    if args.recipe != 'english':
         # Get the model, the inference data preprocessing function names, and the label encoder
-        model, prep_fn_shorts = get_model_and_prep_fn_shorts(args.model, config)
+        model, prep_fn_shorts = get_model_and_prep_fn_shorts(model_name, config)
         label_enc = pickle.load(open(os.path.join('model_zoo', 'label_encoder.pkl'), 'rb'))
         pretrained_models = load_pretrained_models(prep_fn_shorts=prep_fn_shorts, 
-                                                config=config,
-                                                verbose=args.verbose)
+                                                    config=config,
+                                                    verbose=args.verbose)
     else:
         # Get the model and the tokenizer
         model, tokenizer, translator = get_en_model_tokenizer_trans(config=config,
@@ -55,7 +55,7 @@ if __name__ == '__main__':
         # Convert the user input to a dataframe
         user_input_df = pd.DataFrame({'text': [user_input]})
 
-        if args.model != 'en':
+        if args.recipe != 'en':
             _, prediction = predict(model=model,
                                 label_enc=label_enc,
                                 prep_fn_names=prep_fn_shorts,
