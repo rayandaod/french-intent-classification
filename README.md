@@ -19,23 +19,23 @@ Thank you ILLUIN Technology for this opportunity!
 - We should choose metrics to evaluate the algorithm quality
 - We need a python script running a prediction on a text input
 - We need a python script evaluating the chosen model on a test set (csv)
-- We need the prediction to run in a reasonable time (less than 1s)
+- We need the user input prediction to run in a reasonable time (less than 1s)
 - We should compare multiple techniques
 
 ## Getting Started
 
-First clone the repository:
+1. Clone this repository:
 ```bash
 git clone https://github.com/rayandaod/intent-classification.git
 ```
 
-Create a virtual environment (e.g with conda):
+2. Create a virtual environment (e.g with conda):
 ```bash
 conda create -n intent_class_env python=3.10.9
 conda activate intent_class_env
 ```
 
-Then install the dependencies:
+3. Install the dependencies:
 ```bash
 python -m pip install -r requirements.txt
 ```
@@ -166,7 +166,7 @@ The model pre-trained on CLINC150 was chosen based on its popularity. A deeper m
   - [x] Gradient Boosting
   - [x] AdaBoost
   - [x] MLP
-- [ ] Find a way to compare model performances
+- [x] Find a way to compare model performances
 - [x] Implement the english pipeline (translate french input to english + pre-trained english model inference)
 - [x] Sentence embedding (Sentence CamemBERT)
 - [ ] Fine-tune a french language model on translated CLINC150 dataset

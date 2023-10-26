@@ -8,9 +8,6 @@ verbose: True
 example_set_local_path: 'data/ILLUIN/examples.csv'
 clinc150_folder_local_path: 'data/CLINC150'
 
-# CLINC150 dataset name
-clinc150_dataset_name: 'plus'
-
 # Primary classes of interest
 classes: ['translate',
           'travel_alert',
@@ -22,49 +19,44 @@ classes: ['translate',
           'book_flight',
           'out_of_scope']
 
-# Proportion of out_of_scope examples to keep compared to other classes
-proportion_oos: 2.5
+# Translator paths (huggingface)
+translator_fr_en_model_path: 'Helsinki-NLP/opus-mt-tc-big-fr-en'
+translator_en_fr_model_path: 'Helsinki-NLP/opus-mt-tc-big-en-fr'
 
-# Translators
-translator_fr_en_model_path: 'Helsinki-NLP/opus-mt-tc-big-fr-en'  # (huggingface)
-translator_en_fr_model_path: 'Helsinki-NLP/opus-mt-tc-big-en-fr'  # (huggingface)
+# English model path (huggingface; pre-trained on CLINC150)
+pretrained_english_model_path: "dbounds/roberta-large-finetuned-clinc"
 
-# English intent classification (lazy pipeline)
-pretrained_english_model_path: "dbounds/roberta-large-finetuned-clinc"  # (huggingface)
+# Encoder model paths (huggingface)
+flaubert_model_path: 'flaubert/flaubert_base_uncased'
+sentence_camembert_model_path: "dangvantuan/sentence-camembert-base"
 
-# FlauBERT encoder
-flaubert_model_path: 'flaubert/flaubert_base_uncased'  # (huggingface)
-flaubert_aggregate_type: 'avg'  # avg or sum
-flaubert_normalize_embedding: False
+# Recipes
+recipes: {
 
-# CamemBERT encoder
-sentence_camembert_model_path: "dangvantuan/sentence-camembert-base"  # (huggingface)
+  flaubert: {
+    clinc150_version: "plus",
+    training_data_prep: ['oos1',  # see README.md for the list of oos strategies
+                        'down',
+                        'carry',
+                        'trans'],
+    training_inference_data_prep: ['stop',
+                                    'flaubert',
+                                    'avg'],
+    add_val: True,
+    model: "logReg"
+  },
 
-# Preprocessing pipeline
+  camembert: {
+    clinc150_version: "plus",
+    training_data_prep: ['oos1',
+                          'down',
+                          'carry',
+                          'trans'],
+    training_inference_data_prep: ['sentenceCamembert'],
+    add_val: True,
+    model: "logReg"
+  }
+}
 
-# training_data_prep:           ['oos_strat_1',  # see README.md for the list of oos strategies
-#                                 'downsample_oos',
-#                                 'carry_on_enhancer_for_trans',
-#                                 'translate_en_fr']
-# training_inference_data_prep: ['remove_stopwords',
-#                                 'flaubert_emb',
-#                                 'merge_word_emb']
-
-training_data_prep:           ['carry_on_enhancer_for_trans',
-                                'translate_en_fr']
-training_inference_data_prep: ['remove_stopwords',
-                                'flaubert_emb',
-                                'merge_word_emb']
-
-# # Preprocessing steps for training data only
-# training_data_prep: ['oos_strat_1',  # see README.md for the list of oos strategies
-#                     'downsample_oos',
-#                     'carry_on_enhancer_for_trans',
-#                     'translate_en_fr']
-
-# # Preprocessing steps for training and inference data
-# training_inference_data_prep: ['sentence_camembert']
-
-# Final model
-# model_folder_name: 'log_reg_on_CLINC150_oos1_down_carry_trans_stop_sentenceCamembertLarge'
-model_folder_name: 'log_reg_on_CLINC150_oos1_down_carry_trans_sentenceCamembertBase_plus'
+# Best recipe
+best_recipe: "camembert"
