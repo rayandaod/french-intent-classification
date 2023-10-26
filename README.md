@@ -9,7 +9,7 @@ Thank you ILLUIN Technology for this opportunity!
   - translate
   - travel_alert
   - flight_status
-  - lost_luggage --> need high recall + need to print warning about costs
+  - lost_luggage `--> need high recall + need to print warning about costs`
   - travel_suggestion
   - carry_on
   - book_hotel
@@ -17,18 +17,26 @@ Thank you ILLUIN Technology for this opportunity!
   - out_of_scope (if none of the above)
 
 - We should choose metrics to evaluate the algorithm quality
-    --> Done. We will use accuracy, precision, recall, and F1-score. To take into account the instructions, we take a closer look at the out_of_scope and lost_luggage recall (because we want the least number of false negatives).
+    
+    `--> Done. We will use accuracy, precision, recall, and F1-score. To take into account the instructions, we take a closer look at the out_of_scope and lost_luggage recall (because we want the least number of false negatives).`
 - We need a python script running a prediction on a text input
-    --> Done + added a command-line chat interface
+    
+    `--> Done + added a command-line chat interface`
 - We need a python script evaluating the chosen model on a test set (csv)
-    --> Done + added a test set (CLINC150 "plus" test set translated to french)
+    
+    `--> Done + added a test set (CLINC150 "plus" test set translated to french)`
 - We need the user input prediction to run in a reasonable time (less than 1s)
-    --> This was achieved for all models for the typical text length (see evaluation script and folders)
+    
+    `--> This was achieved for all models for the typical text length (see evaluation script and folders)`
 - We should compare multiple techniques
-    --> Data preprocessing: out_of_scope class handling, carry_on enhancer before translation, stopwords removal, ...
-    --> FlauBERT sum/avg word embeddings + logistic regression
-    --> Sentence CamemBERT + logistic regression
-    --> Translation + English pre-trained model
+    
+    `--> Data preprocessing: out_of_scope class handling, carry_on enhancer before translation, stopwords removal, ...`
+
+    `--> FlauBERT sum/avg word embeddings + logistic regression`
+
+    `--> Sentence CamemBERT + logistic regression`
+
+    `--> Translation + English pre-trained model`
 
 ## Getting Started
 
@@ -46,6 +54,11 @@ conda activate intent_class_env
 3. Install the dependencies:
 ```bash
 python -m pip install -r requirements.txt
+```
+
+4. Install `nbstripout` to avoid committing notebook outputs:
+```bash
+nbstripout --install
 ```
 
 ## Quick Start Prediction
@@ -86,10 +99,10 @@ To evaluate a model on a chosen test set (CSV file, as requested in the instruct
 
 ### CLINC150 "plus" test set
 
-This chosen test set is the CLINC150 ("plus" version) test set, translated to french using [this model](Helsinki-NLP/opus-mt-tc-big-en-fr). It is located in `data/test_oos1_down_carry_trans.csv`.
+The chosen test set is the CLINC150 ("plus" version) test set, translated to french using [this model](Helsinki-NLP/opus-mt-tc-big-en-fr). It is located at `data/test_oos1_down_carry_trans.csv`.
 
 Since the original CLINC150 dataset is in english and contains much more classes, I processed it as follows:
-- First the `oos1` strategy, and `down` preprocessing step are adopted (see data preprocessing section at the bottom)
+- First the `oos1` strategy, and `down` (`proportion=2.5`) preprocessing step are adopted (see data preprocessing section at the bottom)
 - Then the `carry` step is applied to enhance the *carry_on* class for translation to french (see data preprocessing section at the bottom)
 - The dataset was finally translated to french
 
@@ -235,9 +248,5 @@ The english pipeline consists in translating the user input to english using a [
 - [x] Sentence embedding (Sentence CamemBERT)
 - [ ] Fine-tune a french language model on translated CLINC150 dataset
 - [x] Check the licenses of the models used
-- [ ] Complete the readme and comment the code properly
+- [x] Complete the readme and comment the code properly
 - [x] Add a requirements.txt file
-
-## 
-If you are working with others, they should also install nbstripout and run nbstripout --install in the repository to ensure that their commits also have the notebook outputs stripped.
-
