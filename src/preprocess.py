@@ -34,7 +34,10 @@ def load_pretrained_models(prep_fn_shorts: list, config:dict, verbose: bool=Fals
         french_stopwords = None
 
     # Load the FlauBERT model and tokenizer (base or large)
-    if 'flaubertBase' in prep_fn_shorts or 'flaubertLarge' in prep_fn_shorts:
+    if 'flaubertSmallCased' in prep_fn_shorts \
+        or 'flaubertBaseUncased' in prep_fn_shorts \
+        or 'flaubertBaseCased' in prep_fn_shorts \
+        or 'flaubertLargeCased' in prep_fn_shorts:
         if verbose: print('\n> Loading the FlauBERT model and tokenizer...')
         flaubert_model_short_name = [s for s in prep_fn_shorts if s.startswith('flaubert')][0]
         flaubert_model_path = config['flaubert_model_paths'][flaubert_model_short_name]
@@ -357,7 +360,7 @@ preprocessing_fn_dict = {
 }
 
 
-def preprocess_train_val_test(pretrained_models: dict, recipe:dict, verbose:bool=False) -> None:
+def preprocess_train_val_test(pretrained_models: dict, recipe:dict, config: dict, verbose:bool=False) -> None:
     # Load the dataset
     dataset = load_dataset(path='clinc_oos', name=recipe['clinc150_version'])
 
