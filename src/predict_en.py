@@ -99,8 +99,7 @@ def prepare_and_predict(user_input: str, config:dict, verbose: bool = False) -> 
     user_input_df = pd.DataFrame({'text': [user_input]})
 
     # Get the model and the tokenizer
-    model, tokenizer, translator = get_en_model_tokenizer_trans(config=config,
-                                                                verbose=verbose)
+    model, tokenizer, translator = get_en_model_tokenizer_trans(config=config, verbose=verbose)
 
     # Predict and time
     start = timeit.default_timer()
@@ -126,9 +125,7 @@ if __name__ == '__main__':
     config = parse_config("config.yaml")
 
     # Predict
-    prediction, speed = prepare_and_predict(user_input=args.text,
-                                            config=config,
-                                            verbose=args.verbose)
+    prediction, speed = prepare_and_predict(user_input=args.text, config=config, verbose=args.verbose)
     
     print('\nPrediction:', prediction)
     print('Speed:', f'{speed:0.2f}', 'seconds')
