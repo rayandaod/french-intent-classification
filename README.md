@@ -87,14 +87,16 @@ Preprocessing steps:
 | English pre-trained |
 
 
-### Example test set (imbalanced, small)
+### Example test set (imbalanced, small)
 
 It was provided to me and is located in `data/ILLUIN/examples.csv`.
 
+The results are averaged over the entire dataset.
+
 | Model | Accuracy | Precision | Recall | F1-score | Speed |
 | ----- | -------- | --------- | ------ | -------- | ----- |
-| Sentence CamemBERT | 0.96 | 0.96 | 0.98 | 0.96 | 4.18s |
-| English pre-trained | 0.95 | 0.96 | 0.95 | 0.95 | 55.06s |
+| Sentence CamemBERT | 0.96 | 0.96 | 0.98 | 0.96 | 0.05s |
+| English pre-trained | 0.95 | 0.96 | 0.95 | 0.95 | 0.68s |
 
 
 ## Thought process, challenges,  ideas

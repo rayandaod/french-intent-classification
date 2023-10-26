@@ -97,10 +97,11 @@ def evaluate(model_name: str, test_path: str, eval_name: str, config: dict, verb
     with open(os.path.join(eval_path, 'classification_report.txt'), 'w') as f:
         f.write(class_report)
 
-    # Print the speed and save it in the evaluation folder
-    print(f'\nSpeed: {stop - start:0.2f} seconds\n')
-    with open(os.path.join(eval_path, 'speed.txt'), 'w') as f:
-        f.write(f'{stop - start:0.2f} seconds')
+    # Print the average speed and save it in the evaluation folder
+    speed = (stop - start) / len(df_test)
+    print(f'\n>> Average speed: {speed:0.2f} seconds')
+    with open(os.path.join(eval_path, 'average_speed.txt'), 'w') as f:
+        f.write(f'{speed:0.2f}')
     
     return
 
