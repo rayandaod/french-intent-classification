@@ -5,3 +5,6 @@ transformers
 sentence_transformers
 datasets
 matplotlib
+sacremoses
+seaborn
+protobuf
