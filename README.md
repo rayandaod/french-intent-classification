@@ -74,7 +74,9 @@ To evaluate a model on a test set (CSV file, as requested in the instructions), 
 
 ### CLINC150 "plus" test set
 
-Remarks:
+This test set is the CLINC150 ("plus" version) test set translated to french. It is located in `data/test.csv`.
+
+Preprocessing steps:
 - First the `oos1` strategy, and `down` preprocessing step are adopted (see data preprocessing section at the bottom)
 - Then the `carry` step is applied to enhance the *carry_on* class for translation to french (see data preprocessing section at the bottom)
 - The dataset was finally translated to french using the Helsinki-NLP/opus-mt-tc-big-en-fr model (see translation section at the bottom)
@@ -86,6 +88,8 @@ Remarks:
 
 
 ### Example test set (imbalanced, small)
+
+It was provided to me and is located in `data/ILLUIN/examples.csv`.
 
 | Model | Accuracy | Precision | Recall | F1-score | Speed |
 | ----- | -------- | --------- | ------ | -------- | ----- |

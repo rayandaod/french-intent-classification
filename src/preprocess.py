@@ -399,7 +399,7 @@ def preprocess_train_val_test(pretrained_models: dict, recipe:dict, verbose:bool
 if __name__ == '__main__':
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--recipe', '-p', type=str, help='The recipe to use.')
+    parser.add_argument('--recipe', '-r', type=str, help='The recipe to use.')
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print the logs or not.')
     args = parser.parse_args()
 
