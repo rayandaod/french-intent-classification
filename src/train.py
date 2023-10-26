@@ -41,6 +41,11 @@ def train(recipe: dict, config: dict, verbose: bool = False) -> None:
     os.makedirs(model_path, exist_ok=True)
     pickle.dump(model, open(f'{model_path}/model.pkl', 'wb'))
 
+    # Save the list of inference preprocessing function short names
+    with open(f'{model_path}/inference_data_prep.txt', 'w') as f:
+        for prep_fn_short in recipe['training_inference_data_prep']:
+            f.write(f'{prep_fn_short}\n')
+
     return
 
 
