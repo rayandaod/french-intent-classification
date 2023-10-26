@@ -81,16 +81,24 @@ Preprocessing steps:
 - Then the `carry` step is applied to enhance the *carry_on* class for translation to french (see data preprocessing section at the bottom)
 - The dataset was finally translated to french using the Helsinki-NLP/opus-mt-tc-big-en-fr model (see translation section at the bottom)
 
+The results are averaged over the entire dataset.
+
 | Model | Accuracy | Precision | Recall | F1-score | Speed |
 | ----- | -------- | --------- | ------ | -------- | ----- |
-| Sentence CamemBERT |
-| English pre-trained |
-| FlauBERT word embeddings |
+| Sentence-CamemBERT-Large | 0.97 | 0.98 | 0.97 | 0.98 | 0.12s |
+| Sentence-CamemBERT-Base | 0.95 | 0.97 | 0.94 | 0.95 | 0.05s |
+| English pre-trained | 0.97 | 0.98 | 0.97 | 0.97 | 0.74s |
+| FlauBERT-Base-Uncased (avg) | 0.63 | 0.65 | 0.62 | 0.63 | 0.05s |
+| FlauBERT-Base-Uncased (avg-norm) | 0.57 | 0.69 | 0.51 | 0.56 | 0.05s |
+| FlauBERT-Base-Uncased (sum) | 0.52 | 0.54 | 0.52 | 0.52 | 0.05s |
+| FlauBERT-Base-Uncased (sum-norm) | 0.57 | 0.69 | 0.51 | 0.56 | 0.05s |
 
 
 ### Example test set (imbalanced, small)
 
 It was provided to me and is located in `data/ILLUIN/examples.csv`.
+
+Although this test set is too small and imbalanced to be used for training, we are including it for completeness.
 
 The results are averaged over the entire dataset.
 

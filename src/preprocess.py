@@ -171,16 +171,16 @@ def carry_on_enhancer_for_trans(df:pd.DataFrame, pretrained_models: dict, verbos
     df = df.copy()
 
     # Replace occurences of 'carry on' in the texts by 'carry on' and a random luggage candidate
-    df['text'] = df['text'].apply(lambda x: x.replace('carry on', f'carry on {luggage_candidates[np.random.randint(len(luggage_candidates))]}'))
+    df['text'] = df[df['label' == 'carry_on']]['text'].apply(lambda x: x.replace('carry on', f'carry on {luggage_candidates[np.random.randint(len(luggage_candidates))]}'))
 
     # Replace occurences of 'carry ons' in the texts by 'carry on'  and a random luggages candidate
-    df['text'] = df['text'].apply(lambda x: x.replace('carry ons', f'carry on {luggages_candidates[np.random.randint(len(luggages_candidates))]}'))
+    df['text'] = df[df['label' == 'carry_on']]['text'].apply(lambda x: x.replace('carry ons', f'carry on {luggages_candidates[np.random.randint(len(luggages_candidates))]}'))
 
     # Replace occurences of 'carry-on' in the texts by 'carry on' and a random luggage candidate
-    df['text'] = df['text'].apply(lambda x: x.replace('carry-on', f'carry on {luggage_candidates[np.random.randint(len(luggage_candidates))]}'))
+    df['text'] = df[df['label' == 'carry_on']]['text'].apply(lambda x: x.replace('carry-on', f'carry on {luggage_candidates[np.random.randint(len(luggage_candidates))]}'))
 
     # Replace occurences of 'carry-ons' in the texts by 'carry on' and a random luggages candidate
-    df['text'] = df['text'].apply(lambda x: x.replace('carry-ons', f'carry on {luggages_candidates[np.random.randint(len(luggages_candidates))]}'))
+    df['text'] = df[df['label' == 'carry_on']]['text'].apply(lambda x: x.replace('carry-ons', f'carry on {luggages_candidates[np.random.randint(len(luggages_candidates))]}'))
 
     return df
 
@@ -410,7 +410,7 @@ def preprocess_train_val_test(pretrained_models: dict, recipe:dict, config: dict
 if __name__ == '__main__':
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--recipe', '-r', type=str, help='The recipe to use.')
+    parser.add_argument('--recipe', '-r', type=str, default=None, help='The recipe to use.')
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print the logs or not.')
     args = parser.parse_args()
 
@@ -418,7 +418,10 @@ if __name__ == '__main__':
     config = parse_config('config.yaml')
 
     # Get the recipe
-    recipe = config['recipes'][args.recipe]
+    if args.recipe is not None:
+        recipe = config['recipes'][args.recipe]
+    else:
+        recipe = config['recipes'][config['best_recipe']]
 
     # Get the preprocessing function short names
     prep_fn_shorts = recipe['training_data_prep'] + recipe['training_inference_data_prep']

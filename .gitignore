@@ -10,8 +10,9 @@ nltk_data/
 **/.ipynb_checkpoints
 **/*.pyc
 
-# Keep examples.csv
+# Keep examples.csv and test set
 !examples.csv
+!test_oos1_down_carry_trans.csv
 
 # Keep every .gitkeep file
 !.gitkeep

@@ -1,0 +1,316 @@
+,text_en,label,text
+0,how would you say fly in italian,translate,comment diriez-vous voler en italien
+1,what's the spanish word for pasta,translate,Quel est le mot espagnol pour les pâtes
+2,how would they say butter in zambia,translate,comment diraient-ils beurre en zambie
+3,how do you say fast in spanish,translate,Comment dire rapide en espagnol
+4,what's the word for trees in norway,translate,Quel est le mot pour les arbres en Norvège
+5,how does one say wonderful in german,translate,Comment dire merveilleux en allemand
+6,how do they say tacos in mexico,translate,Comment dit-on tacos au Mexique
+7,how would one say cruiser in china,translate,Comment peut-on dire croiseur en Chine
+8,what's the french word you use for potato,translate,Quel est le mot français que vous utilisez pour la pomme de terre
+9,what would the word for grass be in finland,translate,Quel serait le mot pour l'herbe en Finlande
+10,how do you say please in french,translate,Comment dites-vous s'il vous plaît en français
+11,how would i say nice to meet you if i were russian,translate,Comment dirais-je agréable de vous rencontrer si j'étais russe
+12,what is the right way to say excuse me in spanish,translate,Quelle est la bonne façon de dire excusez-moi en espagnol
+13,how do i say i'm sorry in chinese,translate,Comment dire que je suis désolé en chinois
+14,how would i say thank you if i were mexican,translate,Comment pourrais-je dire merci si j'étais mexicain
+15,how would i say what is your name if i were french,translate,Comment pourrais-je dire quel est ton nom si j'étais français
+16,how would i say i must be going now if i were german,translate,Comment dirais-je que je dois y aller maintenant si j'étais allemand
+17,how do i say bathroom in italian,translate,Comment dire salle de bain en italien
+18,how might i say hello if i were scottish,translate,Comment pourrais-je dire bonjour si j'étais écossais
+19,i must know how to say thank you in german,translate,Je dois savoir comment dire merci en allemand
+20,how would i say i love you if i were german,translate,Comment dirais-je que je t'aime si j'étais allemand
+21,how would i say how are you today if i were mexican,translate,Comment pourrais-je dire comment tu vas aujourd'hui si j'étais mexicain
+22,how would i say where is the bathroom if i were korean,translate,Comment pourrais-je dire où est la salle de bain si j'étais coréen
+23,how would i say i need directions if i were french,translate,Comment dirais-je que j'ai besoin de directions si j'étais français
+24,how would i say i am lost if i were japanese,translate,Comment dirais-je que je suis perdu si j'étais japonais
+25,english to spanish for dog,translate,anglais à espagnol pour chien
+26,what is dog in spanish,translate,Qu'est-ce qu'un chien en espagnol
+27,how do you say dog in spanish,translate,Comment dire chien en espagnol
+28,dog in spanish,translate,Chien en espagnol
+29,what's the spanish word for dog,translate,Quel est le mot espagnol pour chien
+30,is there a travel alert in spain,travel_alert,Y a-t-il une alerte de voyage en Espagne
+31,travel alert in cuba,travel_alert,Alerte voyage à Cuba
+32,alerts for travel in colombia,travel_alert,Alertes voyage en Colombie
+33,are there travel alerts in mexico,travel_alert,y a-t-il des alertes voyage au Mexique ?
+34,mexico travel alerts,travel_alert,Mexique : Alertes voyage
+35,have there been any travel alerts for the us,travel_alert,y a-t-il eu des alertes de voyage pour les États-Unis?
+36,are there any travel advisories for the us,travel_alert,Existe-t-il des conseils de voyage pour les États-Unis
+37,what are the travel alerts for the us,travel_alert,Quelles sont les alertes de voyage pour les États-Unis
+38,are there travel alerts for the us,travel_alert,y a-t-il des alertes de voyage pour les États-Unis?
+39,what travel alerts are in effect for the us,travel_alert,ce que les alertes de voyage sont en vigueur pour les États-Unis
+40,i want to know if i will be safe if i travel to europe,travel_alert,Je veux savoir si je serai en sécurité si je voyage en Europe
+41,would i be safe if i traveled to japan,travel_alert,Serais-je en sécurité si je voyageais au Japon ?
+42,is it safe to go to north korea,travel_alert,Est-il sûr d'aller en Corée du Nord
+43,will i be safe going to south america,travel_alert,Serai-je en sécurité en Amérique du Sud ?
+44,am i safe to go to africa,travel_alert,Suis-je sûr d'aller en Afrique
+45,which countries have travel alerts,travel_alert,Quels pays ont des alertes de voyage
+46,is it safe in italy,travel_alert,est-il sûr en italie
+47,what are the travel conditions for haiti,travel_alert,quelles sont les conditions de voyage pour haiti
+48,are there any travel bulletins about haiti,travel_alert,Existe-t-il des bulletins de voyage sur Haiti
+49,note any travel alerts for haiti,travel_alert,notez toutes les alertes de voyage pour Haiti
+50,find travel alerts for haiti,travel_alert,trouver des alertes de voyage pour Haiti
+51,does the state department say anything about traveling to haiti,travel_alert,Est-ce que le département d'État dit quelque chose à propos de voyager à Haïti
+52,is there a travel alert for france,travel_alert,Existe-t-il une alerte voyage pour France
+53,is it safe for me to go to turkey,travel_alert,Est-il sûr pour moi d'aller à la Turquie
+54,is it safe to go to serbia,travel_alert,Est-il sûr d'aller à la serbie
+55,safety concerns for malaysia,travel_alert,Préoccupations de sécurité pour la Malaisie
+56,is it safe for me to visit malawi,travel_alert,Est-il sécuritaire pour moi de visiter le Malawi?
+57,is travel to monterrey safe now,travel_alert,Voyage à Monterrey en toute sécurité maintenant
+58,is it safe for people to travel to pakistan,travel_alert,est-il sûr pour les gens de voyager au pakistan
+59,can people safely travel to cambodia,travel_alert,les gens peuvent voyager en toute sécurité au cambodge
+60,what's the status of by delta flight,flight_status,quel est le statut de par vol delta
+61,what's the status of my virgin airlines flight,flight_status,Quel est le statut de mon vol Virgin Airlines
+62,what's the status of my jetblue flight,flight_status,Quel est le statut de mon jetblue ?
+63,what's the status of my southwest flight,flight_status,quel est le statut de mon vol sud-ouest
+64,what's the status of my american airlines flight,flight_status,Quel est le statut de mon vol American Airlines
+65,what's the news with my delta flight,flight_status,Quelles sont les nouvelles avec mon vol delta
+66,where is my delta flight,flight_status,Où est passé mon vol delta ?
+67,what can you tell me about flight dl123,flight_status,Que pouvez-vous me dire sur le vol dl123
+68,where is flight dl123,flight_status,où se trouve le vol dl123
+69,has flight dl123 left,flight_status,Le vol dl123 s'est terminé
+70,is flight dl123 going to arrive on time,flight_status,est le vol dl123 va arriver à l'heure
+71,is my spirit flight running on time,flight_status,c'est mon vol spirituel qui court à l'heure
+72,what's the status for my delta flight this afternoon,flight_status,quel est le statut de mon vol delta cet après-midi
+73,give me the status on my united airlines flight,flight_status,me donner le statut sur mon vol united airlines
+74,what's up with my american airline flight will it be on time,flight_status,ce qui se passe avec mon vol de la compagnie aérienne américaine sera-t-il à l'heure
+75,tell me what the status is for my aa flight,flight_status,me dire quel est le statut pour mon vol aa
+76,i need for you to get me the status of my american airlines flight,flight_status,j'ai besoin pour vous de me obtenir le statut de mon vol American Airlines
+77,tell me the status of my american airlines flight,flight_status,me dire le statut de mon vol des compagnies aériennes américaines
+78,i need to know the status of my american airlines flight,flight_status,J'ai besoin de connaître le statut de mon vol American Airlines
+79,would you let me know the status of my american airlines flight,flight_status,Voulez-vous me faire savoir le statut de mon vol de la compagnie aérienne américaine
+80,let me know the status of my american airlines flight,flight_status,me faire savoir le statut de mon vol American Airlines
+81,has flight dl123 landed,flight_status,vol dl123 a atterri
+82,"is my flight, dl123 on time",flight_status,"c'est mon vol, dl123 à l'heure"
+83,how far out is flight dl123,flight_status,À quelle distance se trouve le vol dl123
+84,is flight dl123 delayed,flight_status,vol dl123 retardé
+85,what time is boarding scheduled,flight_status,quelle heure est prévue l'embarquement
+86,when is boarding scheduled,flight_status,Quand l'embarquement est-il prévu
+87,what time is boarding for my flight,flight_status,quelle heure est l'embarquement pour mon vol
+88,when is boarding scheduled for my flight,flight_status,quand est-ce que l'embarquement est prévu pour mon vol
+89,when is my flight scheduled to board,flight_status,quand est-ce que mon vol est prévu pour embarquer
+90,is my luggage lost,lost_luggage,Mes bagages sont perdus
+91,why is my luggage not here,lost_luggage,Pourquoi mes bagages ne sont pas là
+92,what happened to my luggage,lost_luggage,Qu'est-il arrivé à mes bagages
+93,i need help finding my luggage,lost_luggage,J'ai besoin d'aide pour trouver mes bagages
+94,what steps should i take if my luggage has been lost,lost_luggage,Quelles mesures dois-je prendre si mes bagages ont été perdus?
+95,i seem to have lost my luggage! what are my options now,lost_luggage,J'ai l'impression d'avoir perdu mes bagages! quelles sont mes options maintenant
+96,what would be the best way to deal with lost luggage,lost_luggage,Quelle serait la meilleure façon de traiter les bagages perdus
+97,it appears that my luggage has been lost,lost_luggage,J'ai l'impression que mes bagages ont été perdus
+98,i'm afraid my luggage has gone missing,lost_luggage,J'ai peur que mes bagages aient disparu
+99,i am a bit panicked because my luggage seems to have gone missing,lost_luggage,Je suis un peu paniqué parce que mes bagages semblent avoir disparu
+100,i have no idea where my luggage went!,lost_luggage,Je ne sais pas où sont passés mes bagages !
+101,unfortunately it would appear that my luggage is totally lost,lost_luggage,"Malheureusement, il semblerait que mes bagages soient totalement perdus"
+102,how should i proceed if i accidentally lost my luggage,lost_luggage,Comment dois-je procéder si j'ai perdu accidentellement mes bagages
+103,"if i lost my luggage, what should i do next",lost_luggage,"Si j'ai perdu mes bagages, que dois-je faire ensuite?"
+104,i have no idea where my luggage is,lost_luggage,Je ne sais pas où sont mes bagages
+105,i think my luggage has been misplaced,lost_luggage,Je pense que mes bagages ont été égarés
+106,what do i have to do if i lost my luggage,lost_luggage,Que dois-je faire si j'ai perdu mes bagages
+107,i think my luggage is lost,lost_luggage,Je crois que mes bagages sont perdus
+108,my luggage appears to be lost,lost_luggage,Mes bagages semblent perdus
+109,i can't seem to track down my luggage,lost_luggage,Je n'arrive pas à retrouver mes bagages
+110,what is the next thing i should do if i lost my luggage,lost_luggage,Quelle est la prochaine chose que je devrais faire si j'ai perdu mes bagages
+111,what step should i take next if i lost my luggage,lost_luggage,Que dois-je faire si j'ai perdu mes bagages
+112,i've lost my luggage what should i do now,lost_luggage,J'ai perdu mes bagages que dois-je faire maintenant
+113,what should i do about losing my luggage,lost_luggage,Que dois-je faire pour perdre mes bagages
+114,where would i find my luggage,lost_luggage,Où trouver mes bagages
+115,my luggage has been misplaced,lost_luggage,mes bagages ont été égarés
+116,i can't find my luggage,lost_luggage,Je ne trouve pas mes bagages
+117,i lost all my stuff that i had packed,lost_luggage,J'ai perdu toutes mes affaires que j'avais emballées
+118,my luggage has disappeared,lost_luggage,Mes bagages ont disparu
+119,it appears my luggage is lost,lost_luggage,J'ai l'impression que mes bagages sont perdus
+120,what are some interesting things i can do while in raleigh,travel_suggestion,quelles sont les choses intéressantes que je peux faire pendant que je suis en raleigh
+121,can you help me pick some fun things to do in london during my trip,travel_suggestion,pouvez-vous m'aider à choisir des choses amusantes à faire à Londres pendant mon voyage
+122,"help me plan my traveling itinerary for my trip to madrid, i want to see lots of sights!",travel_suggestion,"aidez-moi à planifier mon itinéraire de voyage pour mon voyage à Madrid, je veux voir beaucoup de sites!"
+123,help me pick a new location to travel to,travel_suggestion,Aidez-moi à choisir un nouvel endroit pour voyager
+124,can you do some research about the best places to travel,travel_suggestion,pouvez-vous faire des recherches sur les meilleurs endroits pour voyager
+125,tell me some fun activities to do in oklahoma city,travel_suggestion,me dire quelques activités amusantes à faire dans la ville oklahoma
+126,what are some popular tourist activities in mexico city,travel_suggestion,quelles sont les activités touristiques populaires dans la ville mexique
+127,i am itching to travel but don't know where to go,travel_suggestion,J'ai envie de voyager mais je ne sais pas où aller
+128,give me some recommendations of good tourist attractions in montreal,travel_suggestion,me donner quelques recommandations de bonnes attractions touristiques à montreal
+129,tell me some fun tourist attractions in london,travel_suggestion,Dites-moi quelques attractions touristiques amusantes à Londres
+130,give me some ideas of what to do during my trip to dallas,travel_suggestion,me donner quelques idées de ce qu'il faut faire pendant mon voyage à dallas
+131,find out the best tourist attractions to visit in moscow,travel_suggestion,Découvrez les meilleures attractions touristiques à visiter à Moscou
+132,i want some suggestions for tourist activities in dublin,travel_suggestion,Je veux des suggestions d'activités touristiques à Dublin
+133,i am traveling to paris soon and would like some suggestions of what to do and see,travel_suggestion,Je voyage bientôt à Paris et je voudrais quelques suggestions de ce qu'il faut faire et à voir
+134,what are some local attractions in portland,travel_suggestion,Quelles sont les attractions locales à Portland
+135,what sorts of activities should i get up to while i am in dublin,travel_suggestion,Quels types d'activités devrais-je faire pendant que je suis à Dublin
+136,i want to explore a new place but don't know where i should go do you have any ideas,travel_suggestion,Je veux explorer un nouvel endroit mais je ne sais pas où je devrais aller avez-vous des idées
+137,please give me some ideas of fun tourist activities to do while i am in paris,travel_suggestion,s'il vous plaît me donner quelques idées d'activités touristiques amusantes à faire pendant que je suis à Paris
+138,can you throw out some suggestions to me of places to travel to,travel_suggestion,pouvez-vous me faire quelques suggestions d'endroits pour voyager
+139,suggest some things for me to do while i am in los angeles,travel_suggestion,Suggérez-moi des choses à faire pendant que je suis à Los Angeles
+140,let me know some things to do in phoenix,travel_suggestion,Laissez-moi savoir quelques choses à faire à Phoenix
+141,let me know some things i can do in dallas,travel_suggestion,Faites-moi savoir certaines choses que je peux faire en dallas
+142,i wanna know some things to do in phoenix,travel_suggestion,Je veux savoir quelque chose à faire à Phoenix
+143,i would like to do some things in phoenix,travel_suggestion,J'aimerais faire des choses en phoenix
+144,tell me some things to do in phoenix,travel_suggestion,me dire quelques choses à faire à Phoenix
+145,what are some fun silly things to do in new jersey,travel_suggestion,Quelles sont les choses amusantes à faire en new jersey
+146,what are some cool tourist attractions in england,travel_suggestion,Quelles sont les attractions touristiques cool en Angleterre
+147,what are some fun local experiences in canada,travel_suggestion,Quelles sont les expériences locales amusantes au Canada?
+148,what are some fun tourist things to do in mumbai,travel_suggestion,quelles sont les choses touristiques amusantes à faire à mumbai
+149,what are some fun cheap activities to do in colorado,travel_suggestion,quelles sont les activités amusantes bon marché à faire à colorado
+150,what restrictions do they have for carry on case,carry_on,Quelles restrictions ont-ils pour continuer sur l'affaire
+151,ist all carry on luggage restrictions applicable to my flight,carry_on,Tous les bagages sont soumis à des restrictions applicables à mon vol
+152,what are the size limits regarding-carry on case bags,carry_on,quelles sont les limites de taille concernant-porter sur les sacs de cas
+153,how many bags can i carry on baggage,carry_on,Combien de bagages puis-je emporter
+154,can i bring perfume on the plane or what is the size limit,carry_on,Puis-je apporter du parfum dans l'avion ou quelle est la limite de taille
+155,what are the rules for traveling with toothpaste,carry_on,Quelles sont les règles pour voyager avec du dentifrice
+156,can i bring suntan lotion in my carry on case,carry_on,Puis-je apporter de la lotion solaire dans mon étui de transport
+157,can i fly with my razors or are there restrictions,carry_on,Puis-je voler avec mes rasoirs ou y a-t-il des restrictions
+158,are there restrictions for carrying lighters in my backpack on a plane,carry_on,Existe-t-il des restrictions pour transporter des briquets dans mon sac à dos dans un avion
+159,how many carry on bags can i take on a flight with american airlines to japan,carry_on,combien de bagages à main puis-je prendre sur un vol avec des compagnies aériennes américaines au Japon
+160,how many carry on bags can i take on a flight with panam to wales,carry_on,combien de bagages à main puis-je prendre sur un vol avec panam to wales
+161,what is the carry on luggage policy for flights on panam,carry_on,quelle est la politique de bagages à main pour les vols sur panam
+162,what is the carry on bag policy for flights on lufthansa,carry_on,quelle est la politique de bagage à main pour les vols sur lufthansa
+163,what is the carry on luggage policy for flights on delta airlines,carry_on,quelle est la politique de bagages à main pour les vols sur Delta Airlines
+164,how many carry on cases can i take on a flight with southwestern to tampa,carry_on,combien de cas puis-je prendre sur un vol avec le sud-ouest à tampa
+165,how many carry on cases can i take on a flight with delta to seattle,carry_on,combien de cas puis-je prendre sur un vol avec delta à Seattle
+166,how many carry on suitcases can i take on a flight with united airlines to austin,carry_on,combien de bagages puis-je emporter sur un vol avec United Airlines à Austin
+167,what is the carry on baggage policy for flights on the airline called jetblue,carry_on,quelle est la politique de bagages à main pour les vols sur la compagnie aérienne appelée jetblue
+168,i need to know the carry on luggage rules for southwest,carry_on,J'ai besoin de connaître les règles de bagages à main pour le sud-ouest
+169,tell me the carry on suitcase rules for my flight,carry_on,me dire les règles de bagage à main pour mon vol
+170,i am flying to finland and wanna know the carry on luggage rules,carry_on,Je m'envole pour la Finlande et je veux connaître les règles de bagage à main
+171,what is the carry on case policy for flights on southwest,carry_on,quelle est la politique de cas de carry on pour les vols sur le sud-ouest
+172,i need to know the the carry on case restrictions for american airlines,carry_on,J'ai besoin de connaître les restrictions de cas de carry on pour les compagnies aériennes américaines
+173,what is the carry on suitcase policy for flights on transaero,carry_on,quelle est la politique de bagages à main pour les vols sur transaero
+174,what is the carry on baggage policy for flights on jetblue,carry_on,quelle est la politique de bagages à main pour les vols sur jetblue
+175,i gotta know the the carry on suitcase restrictions for american airlines,carry_on,Je dois connaître les restrictions de bagage à main pour les compagnies aériennes américaines
+176,what is the carry on case policy for flights on american airlines,carry_on,quelle est la politique de cas de carry on pour les vols sur les compagnies aériennes américaines
+177,i must know the the carry on suitcase restrictions for american airlines,carry_on,Je dois savoir les restrictions de bagage à main pour les compagnies aériennes américaines
+178,i wanna know the carry on luggage rules for the flight i have,carry_on,Je veux connaître les règles de bagage à main pour le vol que j'ai
+179,tell me the the carry on suitcase restrictions for american airlines,carry_on,Dites-moi les restrictions de bagage à main pour les compagnies aériennes américaines
+180,i really need you to find me a hotel with good reviews in phoenix,book_hotel,J'ai vraiment besoin de vous pour me trouver un hôtel avec de bonnes critiques à Phoenix
+181,i wanna book a place to stay in phoenix from the 5th to the 9th of march,book_hotel,Je veux réserver un endroit pour séjourner à Phoenix du 5 au 9 mars
+182,i wanna find a hotel with good reviews in phoenix,book_hotel,Je veux trouver un hôtel avec de bonnes critiques à Phoenix
+183,i want a hotel in phoenix near chase field from january 4th to the 8th,book_hotel,je veux un hôtel à phoenix près du champ de chasse du 4 au 8 janvier
+184,i would like to book a place to stay in phoenix from the 5th to the 9th of march,book_hotel,Je voudrais réserver un endroit pour séjourner à Phoenix du 5 au 9 mars
+185,i need a hotel in phoenix near chase field from january 4th to the 8th,book_hotel,J'ai besoin d'un hôtel à phénix près du champ de chasse du 4 au 8 janvier
+186,i need a hotel room that is big enough for eleven people from march 10th to the 15th in phoenix,book_hotel,J'ai besoin d'une chambre d'hôtel assez grande pour onze personnes du 10 au 15 mars à Phoenix
+187,i must get a hotel in phoenix near chase field from january 4th to the 8th,book_hotel,Je dois trouver un hôtel à Phoenix près du champ de chasse du 4 au 8 janvier
+188,go ahead and find me a hotel with good reviews in phoenix,book_hotel,allez-y et trouvez-moi un hôtel avec de bons commentaires à phoenix
+189,find me a hotel with good reviews in phoenix,book_hotel,me trouver un hôtel avec de bons commentaires à Phoenix
+190,i need you to find me a hotel with good reviews in phoenix,book_hotel,J'ai besoin de vous pour me trouver un hôtel avec de bons commentaires à Phoenix
+191,get me a hotel in phoenix near chase field from january 4th to the 8th,book_hotel,Trouvez-moi un hôtel à Phoenix près du champ de chasse du 4 au 8 janvier
+192,i need to get a hotel in phoenix near chase field from january 4th to the 8th,book_hotel,J'ai besoin d'un hôtel à Phoenix près du champ de chasse du 4 au 8 janvier
+193,please book me a place to stay in phoenix from the 5th to the 9th of march,book_hotel,s'il vous plaît me réserver un endroit pour rester à Phoenix du 5 au 9 mars
+194,i need to book a place to stay in phoenix from the 5th to the 9th of march,book_hotel,J'ai besoin de réserver un endroit pour séjourner à Phoenix du 5 au 9 mars
+195,i really gotta book a place to stay in phoenix from the 5th to the 9th of march,book_hotel,Je dois vraiment réserver un endroit pour rester à Phoenix du 5 au 9 mars
+196,i need to get a hotel room that is big enough for eleven people from march 10th to the 15th in phoenix,book_hotel,J'ai besoin d'une chambre d'hôtel assez grande pour onze personnes du 10 au 15 mars à Phoenix.
+197,can you find me a reputable hotel in honolulu,book_hotel,pouvez-vous me trouver un hôtel de bonne réputation à honolulu
+198,"i want a hotel with good review in honolulu, can you find one",book_hotel,"Je veux un hôtel avec une bonne évaluation à honolulu, pouvez-vous en trouver un"
+199,find for me a hotel with great reviews in ho chi minh,book_hotel,trouver pour moi un hôtel avec de bonnes critiques à ho chi minh
+200,i need your help to find a good reviewed hotel in washington,book_hotel,J'ai besoin de votre aide pour trouver un hôtel bien noté à Washington
+201,can you find me a good reviewed hotel in japan,book_hotel,pouvez-vous me trouver un bon hôtel évalué au Japon
+202,i need a hotel between january 1st through 3rd in jacksonville near the stadium,book_hotel,J'ai besoin d'un hôtel entre le 1er janvier et le 3e à Jacksonville près du stade
+203,find me a place to stay in jacksonville near the stadium from january 1st through 3rd,book_hotel,me trouver un endroit pour séjourner à jacksonville près du stade du 1er au 3 janvier
+204,book me a hotel in jacksonville near the stadium from january 1st to 3rd,book_hotel,réserver un hôtel à jacksonville près du stade du 1er au 3 janvier
+205,id like a room in jacksonville near the stadium between january 1st to 3rd,book_hotel,id comme une chambre à jacksonville près du stade entre le 1er et le 3 janvier
+206,find me a room near the jacksonville stadium between january 1st through january 3rd,book_hotel,me trouver une chambre près du stade Jacksonville entre le 1er et le 3 janvier
+207,get me a hotel room big enough for 4 people from may 3 to may 5 in boston,book_hotel,Obtenez-moi une chambre d'hôtel assez grande pour 4 personnes du 3 au 5 mai à boston
+208,i'm travelling to boston on march 2 until march 4 please make a hotel reservation for me,book_hotel,Je me rends à Boston le 2 mars jusqu'au 4 mars s'il vous plaît faire une réservation d'hôtel pour moi
+209,i need a hotel room for 4 people from may 3 to may 5 in boston,book_hotel,J'ai besoin d'une chambre d'hôtel pour 4 personnes du 3 mai au 5 mai à boston
+210,"book me a flight to jackson, mississippi from austin texas on american airlines",book_flight,"Réserver un vol à destination de jackson, mississippi de austin texas sur compagnies aériennes américaines"
+211,book me a place to chicago from atlanta united airlines,book_flight,me réserver une place à chicago de la compagnie aérienne atlanta united
+212,can you book me a flight to memphis from st louis on delta airlines,book_flight,pouvez-vous réserver un vol à destination de memphis de st louis sur delta compagnies aériennes
+213,book a flight to los angeles from las vegas on american airlines,book_flight,Réserver un vol à destination de los angeles de las vegas sur compagnies aériennes américaines
+214,"book me a flight to dallas from st, paul, minnesota on delta airlines",book_flight,"me réserver un vol à destination de dallas de st, paul, minnesota sur les compagnies aériennes delta"
+215,i need a flight on delta from los angeles to seattle,book_flight,j'ai besoin d'un vol sur le delta de los angeles à seattle
+216,i need to book a flight on jet blue to boston from new york,book_flight,J'ai besoin de réserver un vol sur Jet Blue à Boston de New York
+217,can you get me a flight from san francisco to san jose using american airlines,book_flight,pouvez-vous m'obtenir un vol de San Francisco à San Francisco en utilisant des compagnies aériennes américaines
+218,i want a flight from new york to san francisco using delta,book_flight,Je veux un vol de New York à San Francisco en utilisant Delta
+219,get me a flight from barcelona to paris from jet blue,book_flight,Trouvez-moi un vol de Barcelone à Paris en jet blue
+220,"""i'll be travelling from lax and headed to phl for 120 on the 10th of may",book_flight,"""Je vais voyager de laxiste et me diriger vers phl pour 120 le 10 mai"
+221,"""i'm fly out from lax to phl this weekend for around $120",book_flight,"""Je m'envole de laxiste à phl ce week-end pour environ 120 $"
+222,"""i""m headed out to lax and going to phl for a low price of $120 this weekend on the 12th",book_flight,"""i""m est allé au laxisme et à phl pour un prix bas de 120 $ ce week-end le 12"
+223,"""i'm going on a flight from lax and going to phl, which is only $120 on june 15th",book_flight,"""Je vais prendre un vol de laxiste et aller à phl, ce qui est seulement 120 $ le 15 juin."
+224,"""i'll leave to lax and go to phl for $120 on nov 5th",book_flight,"""Je vais laisser à laxisme et aller à phl pour 120 $ sur nov 5th"
+225,book me a flight from midway to jfk for less than 200 dollars,book_flight,réservez-moi un vol de mi-chemin à jfk pour moins de 200 dollars
+226,i need a flight from boston to miami for under 300 dollars,book_flight,J'ai besoin d'un vol de Boston à Miami pour moins de 300 dollars
+227,can i fly from atlanta to san francisco for less than 100 dollars,book_flight,Puis-je voler de Paris à San Francisco pour moins de 100 dollars?
+228,book a flight from new york to la for less than 200 dollars,book_flight,Réserver un vol de New York à la pour moins de 200 dollars
+229,find me a flight from seattle to detroit for less than 200 dollars,book_flight,me trouver un vol de seatttle à detroit pour moins de 200 dollars
+230,i want to a book a roundtrip flight from san antonio to dtw departing on friday and returning on wednesday,book_flight,je veux réserver un vol aller-retour de san antonio à dtw au départ le vendredi et au retour le mercredi
+231,i'm looking for a flight from billings to cleveland on may 2 and a return on may 9,book_flight,Je suis à la recherche d'un vol de la facturation au 2 mai et d'un retour le 9 mai
+232,i'm looking for flights that depart on the 3rd and return on z from monday to friday,book_flight,je cherche des vols qui partent le 3 et reviennent le z du lundi au vendredi
+233,what roundtrip flights from orlando to vegas are available from thursday to monday,book_flight,quels vols aller-retour de Orlando à Vegas sont disponibles du jeudi au lundi
+234,are there any roundtrip flights from shanghai to seatac that depart on wednesday and return on the thirty first,book_flight,y a-t-il des vols aller-retour de Shanghai à Seatac qui partent le mercredi et reviennent le trente et unième jour?
+235,make sure i get a delta flight from pittsburgh to arizona,book_flight,Assurez-vous que j'obtiens un vol delta de pittsburgh à arizona
+236,book a delta flight to arizona from pittsburgh,book_flight,réserver un vol delta vers l'Arizona de pittsburgh
+237,schedule a flight from pittsburgh to arizona on delta,book_flight,programmer un vol de pittsburgh à arizona sur delta
+238,i want to fly to atlanta for under 300 from pittsburgh,book_flight,Je veux m'envoler pour Atlanta pour moins de 300 de pittsburgh
+239,i need a flight for under 300 from pittsburgh to atlanta,book_flight,j'ai besoin d'un vol pour moins de 300 de pittsburgh à atlanta
+240,does pnc have a routing number,out_of_scope,pnc a-t-il un numéro de routage
+241,your birthday please,out_of_scope,votre anniversaire s'il vous plaît
+242,how many points do i have to cash,out_of_scope,Combien de points dois-je encaisser
+243,how does my current htc phone compare to other android phones,out_of_scope,Comment mon téléphone htc actuel se compare-t-il aux autres téléphones android
+244,i need to know your age,out_of_scope,J'ai besoin de connaître ton âge
+245,can i move some money between my two accounts,out_of_scope,Puis-je transférer de l'argent entre mes deux comptes?
+246,can you assist me with finding my phone,out_of_scope,Pouvez-vous m'aider à trouver mon téléphone
+247,repeat what the weather will be like,out_of_scope,répéter ce que le temps qu'il fera
+248,what do i need to do to get that tax form thing from my job,out_of_scope,Que dois-je faire pour obtenir cette forme d'impôt de mon travail
+249,can you get me recipes for eggs please,out_of_scope,Pouvez-vous m'obtenir des recettes pour les œufs s'il vous plaît
+250,can you tell me some strategies for raising my credit score,out_of_scope,Pouvez-vous me dire quelques stratégies pour augmenter mon pointage de crédit
+251,will the bank charge transaction fees if i use my american card internationally,out_of_scope,la banque facturera-t-elle des frais de transaction si j'utilise ma carte américaine à l'international
+252,what is the meaning of the word girn,out_of_scope,quelle est la signification du mot girn
+253,how many points do i have on my six flags rewards card,out_of_scope,Combien de points ai-je sur ma carte de récompenses six drapeaux
+254,i need eggs; add them to my shopping list,out_of_scope,J'ai besoin d'œufs; ajoutez-les à ma liste d'achats
+255,i need a thai food suggestion,out_of_scope,J'ai besoin d'une suggestion de nourriture thaïlandaise
+256,what region were you born,out_of_scope,Quelle région êtes-vous né
+257,tell me what's on my calendar for march 22nd,out_of_scope,Dites-moi ce qu'il y a sur mon calendrier pour le 22 mars
+258,what company designed this,out_of_scope,quelle société a conçu ce
+259,how long is the school year,out_of_scope,Quelle est la durée de l'année scolaire
+260,how much is the new nikon camera,out_of_scope,combien coûte la nouvelle caméra nikon
+261,what area did you come from,out_of_scope,De quelle région êtes-vous venu
+262,what were you just saying,out_of_scope,Qu'est-ce que tu viens de dire
+263,what are popular lifestyle magazines,out_of_scope,Quels sont les magazines populaires de style de vie
+264,what's the amount of my income,out_of_scope,Quel est le montant de mes revenus
+265,should i run every day,out_of_scope,Devrais-je courir tous les jours
+266,what's the updated status of my order,out_of_scope,quel est le statut mis à jour de ma commande
+267,"ai, address me as deb when speaking to me",out_of_scope,"Ai, adresse-moi en tant que deb en me parlant"
+268,how much do i take home yearly,out_of_scope,combien dois-je prendre à la maison chaque année
+269,"check my calendar for me, please",out_of_scope,"Vérifiez mon calendrier pour moi, s'il vous plaît"
+270,do i need to change my oil soon,out_of_scope,Faut que je change mon huile bientôt
+271,how much fast food have i bought recently,out_of_scope,Combien de fast food ai-je acheté récemment
+272,what does mature mean,out_of_scope,Qu'est-ce que mature signifie
+273,wash windshield,out_of_scope,lavage du pare-brise
+274,are ned's reviews good,out_of_scope,Les avis de Ned sont bons
+275,where am i currently,out_of_scope,Où suis-je actuellement
+276,change this song please,out_of_scope,Changez cette chanson s'il vous plaît
+277,do i require a plug converter when i visit puerto rico,out_of_scope,ai-je besoin d'un convertisseur de fiche quand je visite puerto rico
+278,thats right,out_of_scope,C'est vrai.
+279,"add mary to my phone plan, please",out_of_scope,"Ajouter Marie à mon forfait téléphonique, s'il vous plaît"
+280,i need a pasta recipe,out_of_scope,J'ai besoin d'une recette de pâtes
+281,can you look at when the next iphone is due out,out_of_scope,pouvez-vous regarder quand le prochain iphone est sorti
+282,now tell me my credit card's apr,out_of_scope,Maintenant dis-moi que ma carte de crédit est apr
+283,please set a reminder for me to put the clothes in the dryer,out_of_scope,S'il vous plaît définir un rappel pour moi de mettre les vêtements dans la sécheuse
+284,please go ahead and change my name,out_of_scope,S'il vous plaît aller de l'avant et changer mon nom
+285,can we change your name to clara,out_of_scope,Pouvons-nous changer votre nom en clara
+286,what are the nutrition facts for apple sauce,out_of_scope,quelles sont les valeurs nutritives pour la sauce aux pommes
+287,what kind of reviews does the olive garden have,out_of_scope,Quel genre de commentaires le jardin d'oliviers a-t-il
+288,name unusual facts about the circus,out_of_scope,Faits insolites sur le cirque
+289,what's the first thing you should do to wash your car,out_of_scope,Quelle est la première chose que vous devez faire pour laver votre voiture
+290,what are all the things on my reminder list,out_of_scope,Quelles sont toutes les choses sur ma liste de rappel
+291,what do i need to make macaroni,out_of_scope,De quoi ai-je besoin pour faire des macaronis
+292,roll a 9 sided dice,out_of_scope,lancer un dés à 9 faces
+293,what's the least i can pay this month,out_of_scope,Quel est le moins que je puisse payer ce mois-ci
+294,pay my light bill,out_of_scope,payer ma facture de lumière
+295,how many voicemail messages do i have,out_of_scope,Combien de messages vocaux ai-je
+296,could you track an order for me,out_of_scope,Pourriez-vous suivre une commande pour moi
+297,who can i talk to above you,out_of_scope,A qui puis-je parler au-dessus de toi
+298,where can i find a w2,out_of_scope,Où puis-je trouver un W2
+299,are the reviews for ned's good,out_of_scope,sont les avis pour ned's good
+300,let me know what time the patriots game starts,out_of_scope,me faire savoir à quelle heure le jeu des patriotes commence
+301,look up the conversion rate for the euro to dollar exchange,out_of_scope,regarder le taux de conversion de l'euro vers le dollar
+302,what are the highest-rated android phones,out_of_scope,quels sont les téléphones Android les mieux notés
+303,can you tell me what hobbies the ai has,out_of_scope,Pouvez-vous me dire quels hobbies l'ai a
+304,can you remind me to finish a task,out_of_scope,Pouvez-vous me rappeler de terminer une tâche
+305,what's the best price on a gray xl ll bean men's parka,out_of_scope,quel est le meilleur prix sur un gris xl ll haricot parka pour hommes
+306,i'll be confirming my reservation for joseph at red lobster,out_of_scope,Je confirmerai ma réservation pour joseph au homard rouge
+307,can you roll a four sided die and tell me the result,out_of_scope,Pouvez-vous rouler un dé à quatre faces et me dire le résultat
+308,do you mind if i ask how old you are,out_of_scope,a te dérange si je te demande quel âge tu as
+309,has my mastercard application gone through yet,out_of_scope,Ma demande de mastercard a-t-elle déjà été traitée?
+310,check battery health on this device,out_of_scope,vérifier l'état de la batterie sur cet appareil
+311,please book another boat for this weekends trip,out_of_scope,s'il vous plaît réserver un autre bateau pour ce voyage de week-end
+312,tell david my location,out_of_scope,indiquer mon emplacement à david
+313,when is the next time i should change my oil,out_of_scope,Quand est-ce que la prochaine fois que je devrais changer mon huile
+314,do i have any appointments on my calendar march 22nd,out_of_scope,Est-ce que j'ai des rendez-vous sur mon calendrier le 22 mars

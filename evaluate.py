@@ -112,7 +112,7 @@ if __name__ == '__main__':
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--recipe', '-r', type=str, default=None, help='The recipe of the model to use for inference.')
-    parser.add_argument('--test_path', '-tp', type=str, default='data/examples.csv', help='The test set csv file to use for evaluation.')
+    parser.add_argument('--test_path', '-t', type=str, default='data/examples.csv', help='The test set csv file to use for evaluation.')
     parser.add_argument('--eval_name', '-e', type=str, default='example_set', help='The name of the evaluation folder.')
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print the translated sentence.')
     args = parser.parse_args()
@@ -121,7 +121,10 @@ if __name__ == '__main__':
     config = parse_config("config.yaml")
 
     # Get the model name
-    model_name = get_model_name_from_recipe(args.recipe, config)
+    if args.recipe != 'english':
+        model_name = get_model_name_from_recipe(args.recipe, config)
+    else:
+        model_name = 'english'
 
     # Evaluate the model
     evaluate(recipe_name=args.recipe,
