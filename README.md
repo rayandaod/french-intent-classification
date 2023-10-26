@@ -42,24 +42,24 @@ python -m pip install -r requirements.txt
 
 ## Quick Start Prediction
 
-### Best model (`--model best`)
+### Best recipe
 
-This model consists in getting a sentence embedding from the user input using the pre-trained Sentence CamemBERT model, and training a logistic regression on the translated CLINC150 dataset (filtered to only contain the classes above). It can be used as follows:
+This recipe consists in getting a sentence embedding from the user input using the pre-trained Sentence CamemBERT model, and training a logistic regression on the translated CLINC150 dataset (filtered to only contain the classes above). It can be used as follows:
   
 ```bash
-  python run.py --model best
+  python run_chatbot.py
 ```
 
 A command-line chat interface should appear, in which case you will be prompted to enter an input. The model will output the predicted class, and repeat. To exit the chat, use Ctrl+C.
 
 **Warning**: the first time you run the model, it will download the Sentence CamemBERT model, which is quite large. It might take a few minutes. The model will be cached for future runs.
 
-### The english model (`--model english`)
+### The english recipe
 
 This model consists in translating the user input to english using a [french-to-english translation model]() and a [model pre-trained on CLINC150](https://huggingface.co/dbounds/roberta-large-finetuned-clinc) (in english). It can be used as follows:
   
 ```bash
-  python run.py --model english
+  python run_chatbot.py --model en
 ```
 
 I was worried about the translation time but it's actually pretty fast. A prediction takes xx.xx seconds on my machine (14" MacBook Pro, Apple M1 Pro, 32 GB RAM).
