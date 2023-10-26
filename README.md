@@ -69,7 +69,7 @@ I was worried about the translation time but it's actually pretty fast. A predic
 To evaluate a model on a test set (CSV file, as requested in the instructions), use the following command:
 
 ```bash
-  python evaluate.py --model \[model_folder_name\] --dataset path/to/dataset.csv --verbose
+  python evaluate.py --model [model_folder_name] --dataset path/to/dataset.csv --verbose
 ```
 
 ### CLINC150 "plus" test set
@@ -85,6 +85,7 @@ Preprocessing steps:
 | ----- | -------- | --------- | ------ | -------- | ----- |
 | Sentence CamemBERT |
 | English pre-trained |
+| FlauBERT word embeddings |
 
 
 ### Example test set (imbalanced, small)
@@ -95,8 +96,13 @@ The results are averaged over the entire dataset.
 
 | Model | Accuracy | Precision | Recall | F1-score | Speed |
 | ----- | -------- | --------- | ------ | -------- | ----- |
-| Sentence CamemBERT | 0.96 | 0.96 | 0.98 | 0.96 | 0.05s |
+| Sentence-CamemBERT-Large | 0.96 | 0.96 | 0.98 | 0.97 | 0.13s |
+| Sentence-CamemBERT-Base | 0.96 | 0.96 | 0.98 | 0.96 | 0.05s |
 | English pre-trained | 0.95 | 0.96 | 0.95 | 0.95 | 0.68s |
+| FlauBERT-Base-Uncased (avg) | 0.60 | 0.61 | 0.62 | 0.61 | 0.05s |
+| FlauBERT-Base-Uncased (avg-norm) | 0.57 | 0.67 | 0.52 | 0.56 | 0.05s |
+| FlauBERT-Base-Uncased (sum) | 0.57 | 0.60 | 0.60 | 0.59 | 0.05s |
+| FlauBERT-Base-Uncased (sum-norm) | 0.57 | 0.67 | 0.52 | 0.56 | 0.05s |
 
 
 ## Thought process, challenges,  ideas

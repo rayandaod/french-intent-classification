@@ -55,6 +55,47 @@ recipes: {
     model_type: "logReg"
   },
 
+  flaubert_norm: {
+    clinc150_version: "plus",
+    training_data_prep: ['oos1',  # see README.md for the list of oos strategies
+                        'down',
+                        'carry',
+                        'trans'],
+    training_inference_data_prep: ['stop',
+                                    'flaubertBaseUncased',
+                                    'avg',
+                                    'norm'],
+    add_val: True,
+    model_type: "logReg"
+  },
+
+  flaubert_sum: {
+    clinc150_version: "plus",
+    training_data_prep: ['oos1',  # see README.md for the list of oos strategies
+                        'down',
+                        'carry',
+                        'trans'],
+    training_inference_data_prep: ['stop',
+                                    'flaubertBaseUncased',
+                                    'sum'],
+    add_val: True,
+    model_type: "logReg"
+  },
+
+  flaubert_sum_norm: {
+    clinc150_version: "plus",
+    training_data_prep: ['oos1',  # see README.md for the list of oos strategies
+                        'down',
+                        'carry',
+                        'trans'],
+    training_inference_data_prep: ['stop',
+                                    'flaubertBaseUncased',
+                                    'sum',
+                                    'norm'],
+    add_val: True,
+    model_type: "logReg"
+  },
+
   camembert: {
     clinc150_version: "plus",
     training_data_prep: ['oos1',

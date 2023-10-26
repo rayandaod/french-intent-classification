@@ -1,0 +1,15 @@
+                   precision    recall  f1-score   support
+
+      book_flight       1.00      1.00      1.00         6
+       book_hotel       0.88      1.00      0.93         7
+         carry_on       1.00      1.00      1.00         8
+    flight_status       0.86      1.00      0.92         6
+     lost_luggage       1.00      1.00      1.00         7
+     out_of_scope       1.00      0.86      0.92        21
+        translate       1.00      1.00      1.00         7
+     travel_alert       1.00      1.00      1.00         5
+travel_suggestion       0.89      1.00      0.94         8
+
+         accuracy                           0.96        75
+        macro avg       0.96      0.98      0.97        75
+     weighted avg       0.97      0.96      0.96        75
