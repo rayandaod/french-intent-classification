@@ -13,18 +13,14 @@ from src.helper import *
 parser = argparse.ArgumentParser()
 
 
-def run_chatbot(recipe_name: str, config: dict, verbose: bool = False) -> None:
+def run_chatbot(model_name: str, config: dict, verbose: bool = False) -> None:
     """
     Run the chatbot using the specified recipe.
     """
 
-    # Get the model name
-    model_name = get_model_name_from_recipe(recipe_name=recipe_name,
-                                            config=config)
-
-    if recipe_name != 'english':
+    if model_name != 'english':
         # Get the model, the inference data preprocessing function names, and the label encoder
-        model, prep_fn_shorts = get_model_and_prep_fn_shorts(model_name, config)
+        model, prep_fn_shorts = get_model_and_prep_fn_shorts(model_name)
         label_enc = pickle.load(open(os.path.join('model_zoo', 'label_encoder.pkl'), 'rb'))
         pretrained_models = get_ext_models(prep_fn_shorts=prep_fn_shorts, 
                                                     config=config,
@@ -50,13 +46,12 @@ def run_chatbot(recipe_name: str, config: dict, verbose: bool = False) -> None:
         # Convert the user input to a dataframe
         user_input_df = pd.DataFrame({'text': [user_input]})
 
-        if recipe_name != 'english':
+        if model_name != 'english':
             _, prediction = predict(model=model,
                                 label_enc=label_enc,
                                 prep_fn_shorts=prep_fn_shorts,
                                 df=user_input_df,
                                 prep_dict=pretrained_models,
-                                config=config,
                                 verbose=args.verbose)
         else:
             _, prediction = predict_en(model=model,
@@ -81,7 +76,7 @@ def run_chatbot(recipe_name: str, config: dict, verbose: bool = False) -> None:
 
 if __name__ == '__main__':
     # Parse arguments
-    parser.add_argument('--recipe', '-r', type=str, default=None, help='The recipe of the model to use for inference.')
+    parser.add_argument('--model', '-m', type=str, default='logReg_camembert', help='The model to use for inference.')
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print logs.')
     args = parser.parse_args()
 
@@ -89,4 +84,4 @@ if __name__ == '__main__':
     config = parse_config("config.yaml")
     np.random.seed(config['random_state'])
 
-    run_chatbot()
+    run_chatbot(args.model, config, args.verbose)

@@ -4,6 +4,10 @@ This repository contains the code for an Intent Classification pipeline (data pr
 
 Thank you ILLUIN Technology for this opportunity!
 
+## Demonstration
+
+![Chatbot demo](_readme_assets/chatbot_demo.gif)
+
 ## Instructions summarised
 - We want an algorithm classifying a french text input into one of 9 classes:
   - translate
@@ -250,3 +254,7 @@ The english pipeline consists in translating the user input to english using a [
 - [x] Check the licenses of the models used
 - [x] Complete the readme and comment the code properly
 - [x] Add a requirements.txt file
+
+## Acknowledgements
+
+Thank you [ILLUIN Technology](https://www.illuin.tech/) for this opportunity!
