@@ -15,6 +15,10 @@ from src.helper import *
 
 
 def train(recipe_name: str, config: dict, verbose: bool = False) -> None:
+    """
+    Train a model according to the recipe.
+    """
+
     # Get the recipe
     recipe = config['recipes'][recipe_name]
 
@@ -35,12 +39,6 @@ def train(recipe_name: str, config: dict, verbose: bool = False) -> None:
     # Get the embedding vectors and labels
     X = np.array(train_df['embedding'].tolist())
     y = train_df['label']
-
-    # Initialize PCA, fit, transform
-    if 'pca' in recipe:
-        pca = PCA(n_components=recipe['pca'])
-        pca.fit(X)
-        X = pca.transform(X)
 
     # Load the label encoder and encode the labels
     label_encoder = pickle.load(open(os.path.join('model_zoo', 'label_encoder.pkl'), 'rb'))
@@ -67,10 +65,6 @@ def train(recipe_name: str, config: dict, verbose: bool = False) -> None:
     model_path = f'model_zoo/{model_folder_name}'
     os.makedirs(model_path, exist_ok=True)
     pickle.dump(model, open(f'{model_path}/model.pkl', 'wb'))
-
-    # Save the PCA
-    if 'pca' in recipe:
-        pickle.dump(pca, open(f'{model_path}/pca.pkl', 'wb'))
 
     # Save the list of inference preprocessing function short names
     with open(f'{model_path}/inference_data_prep.txt', 'w') as f:

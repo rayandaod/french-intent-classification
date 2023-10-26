@@ -14,6 +14,10 @@ parser = argparse.ArgumentParser()
 
 
 def run_chatbot(recipe_name: str, config: dict, verbose: bool = False) -> None:
+    """
+    Run the chatbot using the specified recipe.
+    """
+
     # Get the model name
     model_name = get_model_name_from_recipe(recipe_name=recipe_name,
                                             config=config)

@@ -19,6 +19,10 @@ from src.helper import parse_config
 
 
 def get_ext_models(prep_fn_shorts: list, config:dict, verbose: bool=False) -> dict:
+    """
+    Get the external models needed for preprocessing based on the passed preprocessing function short names.
+    """
+
     # Create a translation pipeline
     if 'trans' in prep_fn_shorts:
         if verbose: print('\n> Creating a translation pipeline...')
@@ -69,6 +73,10 @@ def get_ext_models(prep_fn_shorts: list, config:dict, verbose: bool=False) -> di
 
 
 def load_clinc150_dataset_split(clinc150_dataset:DatasetDict, split:str='train', verbose:bool=False) -> pd.DataFrame:
+    """
+    Load a split of the CLINC150 dataset as a dataframe.
+    """
+
     if verbose: print(f'\n>Loading the {split} set of CLINC150...')
 
     # Get the data
@@ -92,6 +100,10 @@ def load_clinc150_dataset_split(clinc150_dataset:DatasetDict, split:str='train',
 
 
 def oos_strat_1(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
+    """
+    Apply the first out_of_scope strategy, i.e replace the classes that are not in config['classes'] by out_of_scope.
+    """
+    
     if verbose: print('\n> Applying the OOS strategy 1...')
 
     # Copy the dataframe
@@ -104,6 +116,10 @@ def oos_strat_1(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.Dat
 
 
 def oos_strat_2(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
+    """
+    Apply the second out_of_scope strategy, i.e only keep the classes that are in config['classes'] (including out_of_scope).
+    """
+
     if verbose: print('\n> Applying the OOS strategy 2...')
 
     # Copy the dataframe
@@ -118,25 +134,11 @@ def oos_strat_2(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.Dat
     return df
 
 
-def oos_strat_3(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
-    if verbose: print('\n> Applying the OOS strategy 3...')
-
-    # Copy the dataframe
-    df = df.copy()
-
-    # Only keep the classes we are interested in
-    df = df[df["label"].isin(config['classes'])]
-
-    # And remove the out_of_scope class
-    df = df[df["label"] != "out_of_scope"]
-
-    # Reset the index
-    df = df.reset_index(drop=True)
-
-    return df
-
-
 def downsample_oos(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
+    """
+    Downsample the out-of-scope class to a certain proportion of the individual in-scope classes (e.g 2.5x)
+    """
+
     if verbose: print('\n> Downsampling the out-of-scope class...')
 
     # Copy the dataframe
@@ -159,6 +161,12 @@ def downsample_oos(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.
 
 
 def carry_on_enhancer_for_trans(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
+    """
+    Enhance the carry-on examples for english-to-french translation.
+    It was noticed that the carry-on examples were not translated correctly,
+    so this function replaces occurences of 'carry on' by 'carry on' and a random luggage candidate.
+    """
+
     if verbose: print('\n> Enhancing carry-on examples for english-to-french translation...')
 
     luggage_candidates = ['luggage', 'baggage', 'suitcase', 'bag', 'case']
@@ -183,6 +191,10 @@ def carry_on_enhancer_for_trans(df:pd.DataFrame, ext_models: dict, verbose:bool=
 
 
 def translate_en_fr(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
+    """
+    Translate the text from English to French using the previously loaded translator.
+    """
+
     if verbose: print('\n> Translating the text from English to French...')
 
     # Copy the dataframe
@@ -206,6 +218,10 @@ def translate_en_fr(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd
 
 
 def remove_stopwords(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
+    """
+    Remove the stopwords from the text (french).
+    """
+
     if verbose: print('\n> Removing the stopwords...')
 
     # Copy the dataframe
@@ -222,6 +238,10 @@ def remove_stopwords(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> p
 
 
 def flaubert_encoder(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
+    """
+    Encode each word using the previously loaded FlauBERT model and tokenizer.
+    """
+
     if verbose: print('\n> Encoding each word using FlauBERT...')
 
     # Copy the dataframe
@@ -264,6 +284,10 @@ def flaubert_encoder(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> p
 
 
 def average_word_emb(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
+    """
+    Merge the word embeddings by averaging them.
+    """
+
     if verbose: print('\n> Averaging the word embeddings...')
 
     # Copy the dataframe
@@ -284,6 +308,10 @@ def average_word_emb(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> p
 
 
 def sum_word_emb(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
+    """
+    Merge the word embeddings by summing them.
+    """
+
     if verbose: print('\n> Summing the word embeddings...')
 
     # Copy the dataframe
@@ -304,6 +332,10 @@ def sum_word_emb(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.Da
 
 
 def norm_emb(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
+    """
+    Normalize the final embedding.
+    """
+
     if verbose: print('\n> Normalizing the embedding...')
 
     # Copy the dataframe
@@ -321,6 +353,10 @@ def norm_emb(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFr
 
 
 def sentence_camembert(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
+    """
+    Encode the sentence using the previously loaded CamemBERT model.
+    """
+
     if verbose: print('\n> Encoding the sentence using CamemBERT...')
 
     # Copy the dataframe
@@ -345,7 +381,6 @@ def sentence_camembert(df:pd.DataFrame, ext_models: dict, verbose:bool=False) ->
 preprocessing_fn_dict = {
     'oos1': oos_strat_1,
     'oos2': oos_strat_2,
-    'oos3': oos_strat_3,
     'down': downsample_oos,
     'carry': carry_on_enhancer_for_trans,
     'trans': translate_en_fr,
@@ -362,7 +397,11 @@ preprocessing_fn_dict = {
 }
 
 
-def preprocess_train_val_test(ext_models: dict, recipe:dict, verbose:bool=False) -> None:
+def preprocess_train_val(ext_models: dict, recipe:dict, verbose:bool=False) -> None:
+    """
+    Preprocess the training and validation sets.
+    """
+
     # Load the dataset
     dataset = load_dataset(path='clinc_oos', name=recipe['clinc150_version'])
 
@@ -429,6 +468,6 @@ if __name__ == '__main__':
                                                     config=config)
 
     # Preprocess the data
-    preprocess_train_val_test(ext_models=ext_models,
+    preprocess_train_val(ext_models=ext_models,
                               recipe=recipe,
                               verbose=args.verbose)

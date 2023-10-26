@@ -18,17 +18,10 @@ from src.predict_english import get_en_model_tokenizer_trans, predict_en
 
 def evaluate(model_name: str, test_path: str, eval_name: str,
              config: dict, verbose: bool=False) -> None:
-    """Evaluate a model on a test set.
-
-    Args:
-        model_name (str): The name of the model to use for inference.
-        test_path (str): The path to the test set csv file.
-        eval_name (str): The name of the evaluation folder.
-        verbose (bool, optional): Whether to print logs. Defaults to False.
-
-    Returns:
-        None
     """
+    Evaluate a model on a test set, and save the results in an evaluation folder.
+    """
+    
     # Get the model path
     model_path = os.path.join('model_zoo', model_name)
 
@@ -95,7 +88,7 @@ def evaluate(model_name: str, test_path: str, eval_name: str,
     plt.yticks(fontsize=20, rotation=45)
     plt.savefig(os.path.join(eval_path, 'confusion_matrix.png'))
 
-    # Print the classification report and
+    # Print the classification report and save it 
     class_report = classification_report(y_true, y_pred, target_names=classes)
     print(class_report)
     with open(os.path.join(eval_path, 'classification_report.txt'), 'w') as f:
@@ -108,7 +101,7 @@ def evaluate(model_name: str, test_path: str, eval_name: str,
     with open(os.path.join(eval_path, 'classification_report.txt'), 'a') as f:
         f.write(f'\n>> Accuracy for in-scope classes: {in_scope_acc:0.2f}')
 
-    # Print the recall for the out-of-scope class and append it to the classification report
+    # Print the out_of_scope class recall score and append it to the classification report
     oos_idx = label_enc.transform(['out_of_scope'])[0]
     oos_recall = cm[oos_idx, oos_idx] / np.sum(cm[oos_idx, :])
     print(f'\n>> Recall for out_of_scope: {oos_recall:0.2f}')

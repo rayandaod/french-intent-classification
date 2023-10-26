@@ -13,6 +13,10 @@ from src.helper import *
 
 
 def get_model_and_prep_fn_shorts(model_name: str):
+    """
+    Get the model and the function names for inference data preprocessing.
+    """
+
     # Load the model and the inference data preprocessing function names
     model = pickle.load(open(os.path.join('model_zoo', model_name, 'model.pkl'), 'rb'))
     preprocessing_fn_names = open(os.path.join('model_zoo', model_name, 'inference_data_prep.txt'), 'r').read().splitlines()
@@ -21,7 +25,12 @@ def get_model_and_prep_fn_shorts(model_name: str):
 
 
 def predict(model: object, label_enc: object, prep_fn_shorts: list[str],
-            df: pd.DataFrame, prep_dict: dict, config: dict, verbose: bool = False):
+            df: pd.DataFrame, prep_dict: dict, verbose: bool = False):
+    """
+    Predicts the intent of the entries in the dataframe using the loaded model and the label encoder.
+    Preprocesses the data using the preprocessing functions if needed.
+    """
+
     # Preprocess the user input
     if 'embedding' not in df.columns:
         for preprocessing_fn_name in prep_fn_shorts:
@@ -42,9 +51,10 @@ def predict(model: object, label_enc: object, prep_fn_shorts: list[str],
     return intent_idx_pred, intent_class_name
 
 
-def prepare_and_predict(model_name: str, user_input: str, config: dict, verbose: bool = False):
+def prepare_and_predict(user_input: str, model_name: str, config: dict, verbose: bool = False):
     """
     Predicts the intent of the user input.
+    Loads the model, the label encoder, and any external models needed for inference.
     """
 
     # Create a dataframe with the user input
@@ -58,11 +68,6 @@ def prepare_and_predict(model_name: str, user_input: str, config: dict, verbose:
     prep_dict = get_ext_models(prep_fn_shorts=prep_fn_shorts, 
                                             config=config,
                                             verbose=verbose)
-    
-    # Get PCA if there is a pca file in model folder
-    if 'pca.pkl' in os.listdir(os.path.join('model_zoo', model_name)):
-        pca = pickle.load(open(os.path.join('model_zoo', model_name, 'pca.pkl'), 'rb'))
-        prep_fn_shorts.append('pca')
 
     # Predict and time
     start = timeit.default_timer()
@@ -71,7 +76,6 @@ def prepare_and_predict(model_name: str, user_input: str, config: dict, verbose:
                             prep_fn_shorts=prep_fn_shorts,
                             df=user_input_df,
                             prep_dict=prep_dict,
-                            config=config,
                             verbose=verbose)
     stop = timeit.default_timer()
     
@@ -91,8 +95,8 @@ if __name__ == '__main__':
     np.random.seed(config['random_state'])
 
     # Predict
-    prediction, speed = prepare_and_predict(model_name=args.model,
-                                            user_input=args.text,
+    prediction, speed = prepare_and_predict(user_input=args.text,
+                                            model_name=args.model,
                                             config=config,
                                             verbose=args.verbose)
     print('\nPrediction:', prediction)

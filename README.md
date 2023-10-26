@@ -9,7 +9,7 @@ Thank you ILLUIN Technology for this opportunity!
   - translate
   - travel_alert
   - flight_status
-  - lost_luggage --> need high precision + need to print warning about costs
+  - lost_luggage --> need high recall + need to print warning about costs
   - travel_suggestion
   - carry_on
   - book_hotel
@@ -17,10 +17,18 @@ Thank you ILLUIN Technology for this opportunity!
   - out_of_scope (if none of the above)
 
 - We should choose metrics to evaluate the algorithm quality
+    --> Done. We will use accuracy, precision, recall, and F1-score. To take into account the instructions, we take a closer look at the out_of_scope and lost_luggage recall (because we want the least number of false negatives).
 - We need a python script running a prediction on a text input
+    --> Done + added a command-line chat interface
 - We need a python script evaluating the chosen model on a test set (csv)
+    --> Done + added a test set (CLINC150 "plus" test set translated to french)
 - We need the user input prediction to run in a reasonable time (less than 1s)
+    --> This was achieved for all models for the typical text length (see evaluation script and folders)
 - We should compare multiple techniques
+    --> Data preprocessing: out_of_scope class handling, carry_on enhancer before translation, stopwords removal, ...
+    --> FlauBERT sum/avg word embeddings + logistic regression
+    --> Sentence CamemBERT + logistic regression
+    --> Translation + English pre-trained model
 
 ## Getting Started
 
@@ -44,50 +52,54 @@ python -m pip install -r requirements.txt
 
 ### `camembert` recipe
 
-This recipe consists in getting a sentence embedding from the user input using the pre-trained Sentence CamemBERT model, and training a logistic regression on the translated CLINC150 dataset (filtered to only contain the classes above). It can be used as follows:
+This recipe consists in getting a sentence embedding from the user input using a pre-trained [Sentence CamemBERT base model](), and training a logistic regression on the translated CLINC150 dataset (filtered to only contain the classes above). The recipe can be used as follows:
   
 ```bash
   python run_chatbot.py --recipe camembert --verbose
 ```
 
+A command-line chat interface should appear, in which case you will be prompted to enter an input. The model will output the predicted class, and repeat. To exit the chat, use Ctrl+C.
+
 ### `camembert_large` recipe
 
-This recipe consists in getting a sentence embedding from the user input using the pre-trained Sentence CamemBERT model, and training a logistic regression on the translated CLINC150 dataset (filtered to only contain the classes above). It can be used as follows:
+Same as above, but using the Sentence CamemBERT large model. It can be used as follows:
   
 ```bash
   python run_chatbot.py --recipe camembert_large --verbose
 ```
 
-A command-line chat interface should appear, in which case you will be prompted to enter an input. The model will output the predicted class, and repeat. To exit the chat, use Ctrl+C.
-
-**Warning**: the first time you run the model, it will download the Sentence CamemBERT model, which is quite large. It might take a few minutes. The model will be cached for future runs.
-
 ### The english recipe
 
-This model consists in translating the user input to english using a [french-to-english translation model]() and a [model pre-trained on CLINC150](https://huggingface.co/dbounds/roberta-large-finetuned-clinc) (in english). It can be used as follows:
+This model is kind of a lazy one. It consists in translating the user input to english using a [french-to-english translation model](https://huggingface.co/Helsinki-NLP/opus-mt-tc-big-en-fr) and a [model pre-trained on CLINC150](https://huggingface.co/dbounds/roberta-large-finetuned-clinc) (in english). It can be used as follows:
   
 ```bash
   python run_chatbot.py --model english --verbose
 ```
 
+Note: the results are good but the model can be slow depending on the text length.
+
 ## Quick Start Evaluation
 
-To evaluate a model on a test set (CSV file, as requested in the instructions), use the following command:
+To evaluate a model on a chosen test set (CSV file, as requested in the instructions), use the following command:
 
-```bash
-  python evaluate.py --model [model_folder_name] --dataset path/to/dataset.csv --verbose
-```
+```python evaluate.py --model [model_folder_name] --dataset path/to/dataset.csv --verbose```
 
 ### CLINC150 "plus" test set
 
-This test set is the CLINC150 ("plus" version) test set translated to french. It is located in `data/test.csv`.
+This chosen test set is the CLINC150 ("plus" version) test set, translated to french using [this model](Helsinki-NLP/opus-mt-tc-big-en-fr). It is located in `data/test_oos1_down_carry_trans.csv`.
 
-Preprocessing steps:
+Since the original CLINC150 dataset is in english and contains much more classes, I processed it as follows:
 - First the `oos1` strategy, and `down` preprocessing step are adopted (see data preprocessing section at the bottom)
 - Then the `carry` step is applied to enhance the *carry_on* class for translation to french (see data preprocessing section at the bottom)
-- The dataset was finally translated to french using the Helsinki-NLP/opus-mt-tc-big-en-fr model (see translation section at the bottom)
+- The dataset was finally translated to french
 
-The results are averaged over the entire dataset.
+To evaluate a model on this test set, you should run:
+
+```bash
+python evaluate.py --model camembert_large --dataset data/test_oos1_down_carry_trans.csv --verbose
+```
+
+The results are averaged over the entire dataset:
 
 | Model | Accuracy | Precision | Recall | F1-score | Speed |
 | ----- | -------- | --------- | ------ | -------- | ----- |
@@ -99,14 +111,11 @@ The results are averaged over the entire dataset.
 | FlauBERT-Base-Uncased (sum) | 0.52 | 0.54 | 0.52 | 0.52 | 0.05s |
 | FlauBERT-Base-Uncased (sum-norm) | 0.57 | 0.69 | 0.51 | 0.56 | 0.05s |
 
+More evaluation results can be found inside the model folders.
 
 ### Example test set (imbalanced, small)
 
-It was provided to me and is located in `data/ILLUIN/examples.csv`.
-
-Although this test set is too small and imbalanced to be used for training, we are including it for completeness.
-
-The results are averaged over the entire dataset.
+This set was provided to me and is located in `data/ILLUIN/examples.csv`. Although this test set is too small and imbalanced to be used for training, we are including it for completeness. The results are averaged over the entire dataset:
 
 | Model | Accuracy | Precision | Recall | F1-score | Speed |
 | ----- | -------- | --------- | ------ | -------- | ----- |
@@ -118,6 +127,37 @@ The results are averaged over the entire dataset.
 | FlauBERT-Base-Uncased (sum) | 0.57 | 0.60 | 0.60 | 0.59 | 0.05s |
 | FlauBERT-Base-Uncased (sum-norm) | 0.57 | 0.67 | 0.52 | 0.56 | 0.05s |
 
+## Preprocess the data and train a model
+
+### Data preprocessing
+
+The data preprocessing steps are implemented in `src/preprocess.py`. The chosen recipe can be specified in `config.yaml`. Each recipe can be defined as:
+
+```yaml
+recipe_name: {
+  clinc150_version: "plus",  # "small", "imbalanced", "plus"
+  training_data_prep: [...],  # see below
+  training_inference_data_prep: [...],  # see below
+  add_val: True,  # True or False
+  model_type: "logReg"  # "logReg", "mlp" for now
+}
+```
+
+The `training_data_prep` and `training_inference_data_prep` are lists of keywords that specify the preprocessing steps to apply to the training data and to the training and inference data respectively. The available keywords are:
+- `oos1`: All the classes except the ones of interest are considered as *out_of_scope*
+- `oss2`: Only the original *out_of_scope* class is considered as *out_of_scope*. The classes we are not interested in are removed.
+- `down`: Downsample the *out_of_scope* class if needed
+- `carry`: Enhance the *carry_on* class for translation to french. This might be needed because the translation model is not very good at translating this class - I noticed that "carry on" is often translated to "continuer" (which is not the meaning we want here). Therefore, I replaced "carry on" by "carry on luggage", or "carry on bag", ...
+- `trans`: Translate the dataset from english to french (see more information in section below)
+- `stop`: Remove stopwords if using word embeddings
+- `flaubertSmallCased`: Compute individual word embeddings (using FlauBERT)
+- `flaubertBaseUncased`: Same as above but using FlauBERT base uncased
+- `flaubertBaseCased`: Same as above but using FlauBERT base cased
+- `flaubertLargeCased`: Same as above but using FlauBERT large cased
+- `avg`: Merge the word embeddings by averagoing them
+- `sum`: Merge the word embeddings by summing them
+- `sentenceCamembertBase`: Compute sentence embeddings (using Sentence CamemBERT Base)
+- `sentenceCamembertBase`: Compute sentence embeddings (using Sentence CamemBERT Large)
 
 ## Thought process, challenges,  ideas
 #### Model
@@ -167,36 +207,15 @@ The CLINC150 dataset text length range covers the examples.csv text length range
 
 ### About the translation from english to french
 
-TODO
-
-## About the data preprocessing
-
-I identified the following steps to preprocess the data before training the models or running inference. They are implemented in the `src/preprocess.py` file, and the chosen recipe can be specified in `config.yaml`:
-- Handle the *out_of_scope* class
-  - `oos1`: all the classes except the ones of interest are considered as *out_of_scope*
-  - `oss2`: only the original *out_of_scope* class is considered as *out_of_scope*. The classes we are not interested in are removed
-  - `oos3`: only keep the classes of interest, and return *out_of_scope* based on a threshold (e.g if the model is not confident enough)
-- `down`: Downsample the *out_of_scope* class if needed
-- `carry`: Enhance the carry_on class for translation to french. This is needed because the translation model is not very good at translating this class - I noticed that "carry on" is often translated to "continuer" (which is not the meaning we want here). Therefore, I replaced "carry on" by "carry on luggage", or "carry on bag", ... in the training data.
-- `trans`: Translate the dataset to french
-- `stop`: Remove stopwords if using word embeddings
-- Compute embeddings
-  - `flaubert`: Either compute individual word embeddings (using FlauBERT)
-  - `sentenceCamembert`: Or use sentence embeddings (using Sentence CamemBERT)
-- `avg`: Merge the word embeddings by averagoing them
-- `sum`: Merge the word embeddings by summing them
-
-The above keywords can be combined in `training_data_prep` (preprocessing applied to the training data only) and `training_inference_data_prep` (preprocessing applied to training **and** inference) to specify the pipeline.
-
-## About the english pipeline
-
-The english pipeline consists in translating the user input to english using a [french-to-english translation model]() and a [model pre-trained on CLINC150](https://huggingface.co/dbounds/roberta-large-finetuned-clinc) (in english).
-
-The translation model was chosen among the following, based on reproted BLEU, chrF scores, and test set diversity:
+Since the task is for the french language, I needed to get a high-accuracy translation of the CLINC150 dataset. Therefore, I chose a translation model among the following, based on reproted BLEU, chrF scores, and test set diversity:
 - https://huggingface.co/Helsinki-NLP/opus-mt-tc-big-en-fr (chosen)
 - https://huggingface.co/Helsinki-NLP/opus-mt-en-fr
 
 The model pre-trained on CLINC150 was chosen based on its popularity. A deeper model evaluation and comparison (especially the tradeoff between performance and model size) would be needed before going to production with this method.
+
+## About the english pipeline
+
+The english pipeline consists in translating the user input to english using a [french-to-english translation model](https://huggingface.co/Helsinki-NLP/opus-mt-tc-big-en-fr) and a [model pre-trained on CLINC150](https://huggingface.co/dbounds/roberta-large-finetuned-clinc) (in english).
 
 ## TODO
 - [ ] Try different filtering startegies for oos (keep only original oos + downsample, or consider other classes as oos + downsample, or remove oos and other classes and return oos based on threshold)
@@ -215,7 +234,7 @@ The model pre-trained on CLINC150 was chosen based on its popularity. A deeper m
 - [x] Implement the english pipeline (translate french input to english + pre-trained english model inference)
 - [x] Sentence embedding (Sentence CamemBERT)
 - [ ] Fine-tune a french language model on translated CLINC150 dataset
-- [ ] Check the licenses of the models used
+- [x] Check the licenses of the models used
 - [ ] Complete the readme and comment the code properly
 - [x] Add a requirements.txt file
 

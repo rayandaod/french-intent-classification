@@ -15,6 +15,10 @@ from src.helper import *
 
 
 def get_en_model_tokenizer_trans(config: dict, verbose: bool = False):
+    """
+    Get the model, the tokenizer and the translator.
+    """
+
     if verbose: print('> Loading the model, tokenizer, and translator...')
 
     model = AutoModelForSequenceClassification.from_pretrained(config['pretrained_english_model_path'])
@@ -26,7 +30,11 @@ def get_en_model_tokenizer_trans(config: dict, verbose: bool = False):
 
 def predict_en(model: object, tokenizer: object, translator: object, 
             df: pd.DataFrame, config: dict, verbose: bool = False):
-    
+    """
+    Predicts the intent of the entries in the dataframe using the "english pipeline"
+    (translator -> tokenizer -> pre-trained model)
+    """
+
     # Copy the dataframe
     df = df.copy()
 
