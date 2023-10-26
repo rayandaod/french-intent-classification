@@ -18,10 +18,7 @@ from tqdm import tqdm
 from src.helper import parse_config
 
 
-def load_pretrained_models(prep_fn_shorts: list, config:dict, verbose: bool=False) -> dict:
-    # Set random seed
-    np.random.seed(config['random_state'])
-
+def get_ext_models(prep_fn_shorts: list, config:dict, verbose: bool=False) -> dict:
     # Create a translation pipeline
     if 'trans' in prep_fn_shorts:
         if verbose: print('\n> Creating a translation pipeline...')
@@ -40,7 +37,7 @@ def load_pretrained_models(prep_fn_shorts: list, config:dict, verbose: bool=Fals
     else:
         french_stopwords = None
 
-    # Load the FlauBERT model and tokenizer (base or large)
+    # Load the FlauBERT model and tokenizer
     if 'flaubertSmallCased' in prep_fn_shorts \
         or 'flaubertBaseUncased' in prep_fn_shorts \
         or 'flaubertBaseCased' in prep_fn_shorts \
@@ -49,10 +46,10 @@ def load_pretrained_models(prep_fn_shorts: list, config:dict, verbose: bool=Fals
         flaubert_model_short_name = [s for s in prep_fn_shorts if s.startswith('flaubert')][0]
         flaubert_model_path = config['flaubert_model_paths'][flaubert_model_short_name]
         flaubert_tokenizer = FlaubertTokenizer.from_pretrained(flaubert_model_path, do_lowercase=True)
-        flaubert, log = FlaubertModel.from_pretrained(flaubert_model_path, output_loading_info=True)
+        flaubert_model, log = FlaubertModel.from_pretrained(flaubert_model_path, output_loading_info=True)
     else:
         flaubert_tokenizer = None
-        flaubert = None
+        flaubert_model = None
 
     # Load the CamemBERT model and tokenizer
     if 'sentenceCamembertBase' in prep_fn_shorts or 'sentenceCamembertLarge' in prep_fn_shorts:
@@ -66,7 +63,7 @@ def load_pretrained_models(prep_fn_shorts: list, config:dict, verbose: bool=Fals
         'translator_en_fr': translator,
         'french_stopwords': french_stopwords,
         'flaubert_tokenizer': flaubert_tokenizer,
-        'flaubert': flaubert,
+        'flaubert_model': flaubert_model,
         'sentence_camembert_model': sentence_camembert_model
     }
 
@@ -94,7 +91,7 @@ def load_clinc150_dataset_split(clinc150_dataset:DatasetDict, split:str='train',
     return df
 
 
-def oos_strat_1(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
+def oos_strat_1(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Applying the OOS strategy 1...')
 
     # Copy the dataframe
@@ -106,7 +103,7 @@ def oos_strat_1(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) ->
     return df
 
 
-def oos_strat_2(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
+def oos_strat_2(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Applying the OOS strategy 2...')
 
     # Copy the dataframe
@@ -121,7 +118,7 @@ def oos_strat_2(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) ->
     return df
 
 
-def oos_strat_3(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
+def oos_strat_3(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Applying the OOS strategy 3...')
 
     # Copy the dataframe
@@ -139,7 +136,7 @@ def oos_strat_3(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) ->
     return df
 
 
-def downsample_oos(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
+def downsample_oos(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Downsampling the out-of-scope class...')
 
     # Copy the dataframe
@@ -161,7 +158,7 @@ def downsample_oos(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False)
     return df
 
 
-def carry_on_enhancer_for_trans(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
+def carry_on_enhancer_for_trans(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Enhancing carry-on examples for english-to-french translation...')
 
     luggage_candidates = ['luggage', 'baggage', 'suitcase', 'bag', 'case']
@@ -185,14 +182,14 @@ def carry_on_enhancer_for_trans(df:pd.DataFrame, pretrained_models: dict, verbos
     return df
 
 
-def translate_en_fr(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
+def translate_en_fr(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Translating the text from English to French...')
 
     # Copy the dataframe
     df = df.copy()
 
     # Translate the text from English to French
-    translator_fn = lambda x: pretrained_models['translator_en_fr'](x)[0]['translation_text']
+    translator_fn = lambda x: ext_models['translator_en_fr'](x)[0]['translation_text']
     if verbose:
         tqdm.pandas()
         df['text_fr'] = df['text'].progress_apply(translator_fn)
@@ -208,14 +205,14 @@ def translate_en_fr(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False
     return df
 
 
-def remove_stopwords(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
+def remove_stopwords(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Removing the stopwords...')
 
     # Copy the dataframe
     df = df.copy()
 
     # Get the stopwords
-    french_stopwords = pretrained_models['french_stopwords']
+    french_stopwords = ext_models['french_stopwords']
 
     # Remove the stopwords
     df['text'] = df['text'].apply(lambda x: ' '.join([word for word in x.split() if word not in french_stopwords]))
@@ -224,15 +221,15 @@ def remove_stopwords(df:pd.DataFrame, pretrained_models: dict, verbose:bool=Fals
     return df
 
 
-def flaubert_encoder(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
+def flaubert_encoder(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Encoding each word using FlauBERT...')
 
     # Copy the dataframe
     df = df.copy()
 
     # Get the FlauBERT tokenizer and model
-    flaubert_tokenizer = pretrained_models['flaubert_tokenizer']
-    flaubert = pretrained_models['flaubert']
+    flaubert_tokenizer = ext_models['flaubert_tokenizer']
+    flaubert_model = ext_models['flaubert_model']
 
     # Tokenize each row using the FlauBERT tokenizer
     # Use tqdm to display a progress bar, only if verbose is True
@@ -253,7 +250,7 @@ def flaubert_encoder(df:pd.DataFrame, pretrained_models: dict, verbose:bool=Fals
 
     # Get the FlauBERT embeddings
     # Use tqdm to display a progress bar, only if verbose is True
-    flaubert_fn = lambda x: flaubert(torch.tensor([x], dtype=torch.long))[0][0].detach().numpy()
+    flaubert_fn = lambda x: flaubert_model(torch.tensor([x], dtype=torch.long))[0][0].detach().numpy()
     if verbose:
         df['word_embeddings'] = df['token_id'].progress_apply(flaubert_fn)
     else:
@@ -266,7 +263,7 @@ def flaubert_encoder(df:pd.DataFrame, pretrained_models: dict, verbose:bool=Fals
     return df
 
 
-def average_word_emb(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
+def average_word_emb(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Averaging the word embeddings...')
 
     # Copy the dataframe
@@ -286,7 +283,7 @@ def average_word_emb(df:pd.DataFrame, pretrained_models: dict, verbose:bool=Fals
     return df
 
 
-def sum_word_emb(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
+def sum_word_emb(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Summing the word embeddings...')
 
     # Copy the dataframe
@@ -306,7 +303,7 @@ def sum_word_emb(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -
     return df
 
 
-def norm_emb(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
+def norm_emb(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Normalizing the embedding...')
 
     # Copy the dataframe
@@ -323,14 +320,14 @@ def norm_emb(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd
     return df
 
 
-def sentence_camembert(df:pd.DataFrame, pretrained_models: dict, verbose:bool=False) -> pd.DataFrame:
+def sentence_camembert(df:pd.DataFrame, ext_models: dict, verbose:bool=False) -> pd.DataFrame:
     if verbose: print('\n> Encoding the sentence using CamemBERT...')
 
     # Copy the dataframe
     df = df.copy()
 
     # Get the CamemBERT model
-    sentence_camembert_model = pretrained_models['sentence_camembert_model']
+    sentence_camembert_model = ext_models['sentence_camembert_model']
 
     # Get the embeddings
     if verbose:
@@ -365,7 +362,7 @@ preprocessing_fn_dict = {
 }
 
 
-def preprocess_train_val_test(pretrained_models: dict, recipe:dict, config: dict, verbose:bool=False) -> None:
+def preprocess_train_val_test(ext_models: dict, recipe:dict, verbose:bool=False) -> None:
     # Load the dataset
     dataset = load_dataset(path='clinc_oos', name=recipe['clinc150_version'])
 
@@ -397,7 +394,7 @@ def preprocess_train_val_test(pretrained_models: dict, recipe:dict, config: dict
             # Apply the preprocessing function if the file does not already exist
             if not os.path.exists(os.path.join(dataset_folder, f'{concat_short_names}.pkl')):
                 df = preprocessing_fn_dict[preprocessing_fn_name](df=df,
-                                                                  pretrained_models=pretrained_models,
+                                                                  ext_models=ext_models,
                                                                   verbose=verbose)
                 df.to_pickle(os.path.join(dataset_folder, f'{concat_short_names}.pkl'))
             
@@ -414,8 +411,9 @@ if __name__ == '__main__':
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print the logs or not.')
     args = parser.parse_args()
 
-    # Get the config
+    # Get the config and set the random seed
     config = parse_config('config.yaml')
+    np.random.seed(config['random_state'])
 
     # Get the recipe
     if args.recipe is not None:
@@ -427,11 +425,10 @@ if __name__ == '__main__':
     prep_fn_shorts = recipe['training_data_prep'] + recipe['training_inference_data_prep']
 
     # Load pretrained models
-    pretrained_models_dict = load_pretrained_models(prep_fn_shorts=prep_fn_shorts,
+    ext_models = get_ext_models(prep_fn_shorts=prep_fn_shorts,
                                                     config=config)
 
     # Preprocess the data
-    preprocess_train_val_test(pretrained_models=pretrained_models_dict,
+    preprocess_train_val_test(ext_models=ext_models,
                               recipe=recipe,
-                              config=config,
                               verbose=args.verbose)

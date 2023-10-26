@@ -148,7 +148,7 @@ I was given a csv file (`data/ILLUIN/examples.csv`) containing some examples of 
 
 ### CLINC150 dataset
 
-I looked for a larger dataset. Naturally, I chose the [CLINC150 dataset](https://github.com/clinc/oos-eval), which consists in 150 classes (intents) over 10 domains and includes the 8 classes we are interested in. The dataset also contains one label for *out-of-scope* intent. It has three available versions:
+I looked for a larger dataset, and I chose the [CLINC150 dataset](https://github.com/clinc/oos-eval) ([paper](https://aclanthology.org/D19-1131.pdf)), which consists in 150 classes (intents) over 10 domains and includes the 8 classes we are interested in. The dataset also contains one label for *out-of-scope* intent. It has three available versions:
 - *small*: 50 training queries per each in-scope intent
 - *imbalanced*: intents have either 25, 50, 75, or 100 training queries
 - *plus*: 250 out-of-scope training examples, rather than 100

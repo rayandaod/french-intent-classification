@@ -13,3 +13,7 @@ travel_suggestion       0.91      1.00      0.95        30
          accuracy                           0.95       315
         macro avg       0.97      0.94      0.95       315
      weighted avg       0.95      0.95      0.95       315
+
+>> Accuracy for in-scope classes: 0.94
+>> Recall for out_of_scope: 0.99
+>> Average speed: 0.05 seconds

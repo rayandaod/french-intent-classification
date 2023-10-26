@@ -8,6 +8,7 @@ import numpy as np
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
+from sklearn.decomposition import PCA
 
 
 from src.helper import *
@@ -35,17 +36,29 @@ def train(recipe_name: str, config: dict, verbose: bool = False) -> None:
     X = np.array(train_df['embedding'].tolist())
     y = train_df['label']
 
+    # Initialize PCA, fit, transform
+    if 'pca' in recipe:
+        pca = PCA(n_components=recipe['pca'])
+        pca.fit(X)
+        X = pca.transform(X)
+
     # Load the label encoder and encode the labels
     label_encoder = pickle.load(open(os.path.join('model_zoo', 'label_encoder.pkl'), 'rb'))
     y = label_encoder.fit_transform(y)
 
-    # Train the model
+    # Choose the model
     if verbose: print('\n> Training the model...')
     model_type = recipe['model_type']
+    
+    # Logistic regression
     if model_type == 'logReg':
         model = LogisticRegression(random_state=config['random_state'], max_iter=1000)
+    
+    # Multi-layer perceptron
     elif model_type == 'mlp':
         model = MLPClassifier(random_state=config['random_state'])
+    
+    # Train
     model.fit(X, y)
 
     # Save the model and the label encoder
@@ -54,6 +67,10 @@ def train(recipe_name: str, config: dict, verbose: bool = False) -> None:
     model_path = f'model_zoo/{model_folder_name}'
     os.makedirs(model_path, exist_ok=True)
     pickle.dump(model, open(f'{model_path}/model.pkl', 'wb'))
+
+    # Save the PCA
+    if 'pca' in recipe:
+        pickle.dump(pca, open(f'{model_path}/pca.pkl', 'wb'))
 
     # Save the list of inference preprocessing function short names
     with open(f'{model_path}/inference_data_prep.txt', 'w') as f:
@@ -70,8 +87,9 @@ if __name__ == '__main__':
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print the logs or not.')
     args = parser.parse_args()
 
-    # Get the config
+    # Get the config and set seeds
     config = parse_config("config.yaml")
+    np.random.seed(config['random_state'])
 
     # Train
     train(recipe_name=args.recipe, config=config, verbose=args.verbose)

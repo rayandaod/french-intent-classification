@@ -1,0 +1,19 @@
+                   precision    recall  f1-score   support
+
+      book_flight       1.00      0.83      0.91        30
+       book_hotel       0.97      1.00      0.98        30
+         carry_on       0.88      0.93      0.90        30
+    flight_status       1.00      1.00      1.00        30
+     lost_luggage       1.00      1.00      1.00        30
+     out_of_scope       0.94      0.97      0.95        75
+        translate       0.96      0.90      0.93        30
+     travel_alert       0.97      0.93      0.95        30
+travel_suggestion       0.94      1.00      0.97        30
+
+         accuracy                           0.96       315
+        macro avg       0.96      0.95      0.96       315
+     weighted avg       0.96      0.96      0.96       315
+
+>> Accuracy for in-scope classes: 0.95
+>> Recall for out_of_scope: 0.97
+>> Average speed: 0.05 seconds

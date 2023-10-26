@@ -5,6 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import argparse
 import timeit
 import torch
+import numpy as np
 
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from transformers import pipeline
@@ -121,8 +122,9 @@ if __name__ == '__main__':
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print logs.')
     args = parser.parse_args()
 
-    # Get the config
+    # Get the config and set the seed
     config = parse_config("config.yaml")
+    np.random.seed(config['random_state'])
 
     # Predict
     prediction, speed = prepare_and_predict(user_input=args.text, config=config, verbose=args.verbose)

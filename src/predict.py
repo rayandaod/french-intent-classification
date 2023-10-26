@@ -8,11 +8,11 @@ import argparse
 import timeit
 import numpy as np
 
-from src.preprocess import preprocessing_fn_dict, load_pretrained_models
+from src.preprocess import preprocessing_fn_dict, get_ext_models
 from src.helper import *
 
 
-def get_model_and_prep_fn_shorts(model_name: str, config: dict):
+def get_model_and_prep_fn_shorts(model_name: str):
     # Load the model and the inference data preprocessing function names
     model = pickle.load(open(os.path.join('model_zoo', model_name, 'model.pkl'), 'rb'))
     preprocessing_fn_names = open(os.path.join('model_zoo', model_name, 'inference_data_prep.txt'), 'r').read().splitlines()
@@ -20,13 +20,13 @@ def get_model_and_prep_fn_shorts(model_name: str, config: dict):
     return model, preprocessing_fn_names
 
 
-def predict(model: object, label_enc: object, prep_fn_names: list[str],
-            df: pd.DataFrame, pretrained_models: dict, config: dict, verbose: bool = False):
+def predict(model: object, label_enc: object, prep_fn_shorts: list[str],
+            df: pd.DataFrame, prep_dict: dict, config: dict, verbose: bool = False):
     # Preprocess the user input
     if 'embedding' not in df.columns:
-        for preprocessing_fn_name in prep_fn_names:
+        for preprocessing_fn_name in prep_fn_shorts:
             df = preprocessing_fn_dict[preprocessing_fn_name](df=df,
-                                                              pretrained_models=pretrained_models,
+                                                              ext_models=prep_dict,
                                                               verbose=verbose)
 
     # Get the embeddings
@@ -51,21 +51,26 @@ def prepare_and_predict(model_name: str, user_input: str, config: dict, verbose:
     user_input_df = pd.DataFrame({'text': [user_input]})
 
     # Get the model, the inference data preprocessing function names, and the label encoder
-    model, prep_fn_shorts = get_model_and_prep_fn_shorts(model_name, config)
+    model, prep_fn_shorts = get_model_and_prep_fn_shorts(model_name)
     label_enc = pickle.load(open(os.path.join('model_zoo', 'label_encoder.pkl'), 'rb'))
 
     # Get the pretrained models
-    pretrained_models = load_pretrained_models(prep_fn_shorts=prep_fn_shorts, 
-                                               config=config,
-                                               verbose=verbose)
+    prep_dict = get_ext_models(prep_fn_shorts=prep_fn_shorts, 
+                                            config=config,
+                                            verbose=verbose)
+    
+    # Get PCA if there is a pca file in model folder
+    if 'pca.pkl' in os.listdir(os.path.join('model_zoo', model_name)):
+        pca = pickle.load(open(os.path.join('model_zoo', model_name, 'pca.pkl'), 'rb'))
+        prep_fn_shorts.append('pca')
 
     # Predict and time
     start = timeit.default_timer()
     _, prediction = predict(model=model,
                             label_enc=label_enc,
-                            prep_fn_names=prep_fn_shorts,
+                            prep_fn_shorts=prep_fn_shorts,
                             df=user_input_df,
-                            pretrained_models=pretrained_models,
+                            prep_dict=prep_dict,
                             config=config,
                             verbose=verbose)
     stop = timeit.default_timer()
@@ -76,19 +81,17 @@ def prepare_and_predict(model_name: str, user_input: str, config: dict, verbose:
 if __name__ == '__main__':
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--recipe', '-r', type=str, default=None, help='The name of the recipe to use for inference.')
+    parser.add_argument('--model', '-m', type=str, default=None, help='The name of the model folder.')
     parser.add_argument('--text', '-t', type=str, help='The text to predict the intent of.')
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print logs.')
     args = parser.parse_args()
 
-    # Get the config
+    # Get the config and set the seed
     config = parse_config("config.yaml")
-
-    # Get the model name
-    model_name = get_model_name_from_recipe(args.recipe, config)
+    np.random.seed(config['random_state'])
 
     # Predict
-    prediction, speed = prepare_and_predict(model_name=model_name,
+    prediction, speed = prepare_and_predict(model_name=args.model,
                                             user_input=args.text,
                                             config=config,
                                             verbose=args.verbose)
