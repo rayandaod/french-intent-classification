@@ -11,11 +11,8 @@ import numpy as np
 from src.preprocess import preprocessing_fn_dict
 from src.helper import *
 
-# Get the config
-config = parse_config("config.yaml")
 
-
-def get_model_preprocessingFns(model_name: str):
+def get_model_preprocessingFns(model_name: str, config: dict):
     # Load the model and the inference data preprocessing function names
     model = pickle.load(open(os.path.join('model_zoo', model_name, 'model.pkl'), 'rb'))
     preprocessing_fn_names = open(os.path.join('model_zoo', model_name, 'inference_data_prep.txt'), 'r').read().splitlines()
@@ -24,7 +21,7 @@ def get_model_preprocessingFns(model_name: str):
 
 
 def predict(model: object, label_enc: object, prep_fn_names: list[str],
-            df: pd.DataFrame, verbose: bool = False):
+            df: pd.DataFrame, config: dict, verbose: bool = False):
     # Preprocess the user input
     if 'embedding' not in df.columns:
         for preprocessing_fn_name in prep_fn_names:
@@ -42,7 +39,7 @@ def predict(model: object, label_enc: object, prep_fn_names: list[str],
     return intent_idx_pred, intent_class_name
 
 
-def prepare_and_predict(model_name: str, user_input: str, verbose: bool = False):
+def prepare_and_predict(model_name: str, user_input: str, config: dict, verbose: bool = False):
     """
     Predicts the intent of the user input.
     """
@@ -62,6 +59,7 @@ def prepare_and_predict(model_name: str, user_input: str, verbose: bool = False)
                             label_enc=label_enc,
                             prep_fn_names=preprocessing_fn_names,
                             df=user_input_df,
+                            config=config,
                             verbose=verbose)
     stop = timeit.default_timer()
     
@@ -69,6 +67,10 @@ def prepare_and_predict(model_name: str, user_input: str, verbose: bool = False)
 
 
 if __name__ == '__main__':
+    # Get the config
+    config = parse_config("config.yaml")
+
+    # Parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='logReg_on_PLUS_oos1_down_carry_trans_sentenceCamembertBase',
                         help='The name of the model to use for inference.')
@@ -76,6 +78,10 @@ if __name__ == '__main__':
     parser.add_argument('--verbose', action='store_true', help='Whether to print logs.')
     args = parser.parse_args()
 
-    prediction, speed = prepare_and_predict(args.model, args.text, verbose=args.verbose)
-    print('Prediction:', prediction)
+    # Predict
+    prediction, speed = prepare_and_predict(model_name=args.model,
+                                            user_input=args.text,
+                                            config=config,
+                                            verbose=args.verbose)
+    print('\nPrediction:', prediction)
     print('Speed:', f'{speed:0.2f}', 'seconds')
