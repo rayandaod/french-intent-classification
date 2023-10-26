@@ -109,7 +109,7 @@ def evaluate(model_name: str, test_path: str, eval_name: str, config: dict, verb
 if __name__ == '__main__':
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', '-m', type=str, default=None, help='The model to use for inference.')
+    parser.add_argument('--recipe', '-r', type=str, default=None, help='The recipe of the model to use for inference.')
     parser.add_argument('--test_path', '-tp', type=str, default='data/examples.csv', help='The test set csv file to use for evaluation.')
     parser.add_argument('--eval_name', '-e', type=str, default='example_set', help='The name of the evaluation folder.')
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print the translated sentence.')
@@ -119,11 +119,13 @@ if __name__ == '__main__':
     config = parse_config("config.yaml")
 
     # Take the best model if no model is specified
-    if args.model is None:
-        args.model = get_model_name_from_recipe(config['recipes'][config['best_recipe']])
+    if args.recipe is None:
+        model_name = get_model_name_from_recipe(config['recipes'][config['best_recipe']])
+    else:
+        model_name = get_model_name_from_recipe(config['recipes'][args.recipe])
 
     # Evaluate the model
-    evaluate(model_name=args.model,
+    evaluate(model_name=model_name,
              test_path=args.test_path,
              eval_name=args.eval_name,
              config=config,
