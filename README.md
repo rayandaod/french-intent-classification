@@ -47,7 +47,7 @@ python -m pip install -r requirements.txt
 This recipe consists in getting a sentence embedding from the user input using the pre-trained Sentence CamemBERT model, and training a logistic regression on the translated CLINC150 dataset (filtered to only contain the classes above). It can be used as follows:
   
 ```bash
-  python run_chatbot.py
+  python run_chatbot.py --verbose
 ```
 
 A command-line chat interface should appear, in which case you will be prompted to enter an input. The model will output the predicted class, and repeat. To exit the chat, use Ctrl+C.
@@ -59,29 +59,38 @@ A command-line chat interface should appear, in which case you will be prompted 
 This model consists in translating the user input to english using a [french-to-english translation model]() and a [model pre-trained on CLINC150](https://huggingface.co/dbounds/roberta-large-finetuned-clinc) (in english). It can be used as follows:
   
 ```bash
-  python run_chatbot.py --model en
+  python run_chatbot.py --model en --verbose
 ```
 
 I was worried about the translation time but it's actually pretty fast. A prediction takes xx.xx seconds on my machine (14" MacBook Pro, Apple M1 Pro, 32 GB RAM).
 
 ## Quick Start Evaluation
 
-To evaluate a model on a test set, use the following command:
+To evaluate a model on a test set (CSV file, as requested in the instructions), use the following command:
 
 ```bash
-  python evaluate.py --model best --dataset path/to/dataset.csv
+  python evaluate.py --model \[model_folder_name\] --dataset path/to/dataset.csv --verbose
 ```
 
-When evaluated on the translated [CLINC150](https://github.com/clinc/oos-eval) test set, the models achieve the following results:
+### CLINC150 "plus" test set
 
-| Model | Accuracy | Precision | Recall | F1-score |
-| ----- | -------- | --------- | ------ | -------- |
-| FlauBERT word embeddings (sum) |
-| FlauBERT word embeddings (average) |
-| FlauBERT word embeddings (sum + norm) |
-| FlauBERT word embeddings (average + norm) |
+Remarks:
+- First the `oos1` strategy, and `down` preprocessing step are adopted (see data preprocessing section at the bottom)
+- Then the `carry` step is applied to enhance the *carry_on* class for translation to french (see data preprocessing section at the bottom)
+- The dataset was finally translated to french using the Helsinki-NLP/opus-mt-tc-big-en-fr model (see translation section at the bottom)
+
+| Model | Accuracy | Precision | Recall | F1-score | Speed |
+| ----- | -------- | --------- | ------ | -------- | ----- |
 | Sentence CamemBERT (best) |
 | English pre-trained model |
+
+
+### Example test set (imbalanced, small)
+
+| Model | Accuracy | Precision | Recall | F1-score | Speed |
+| ----- | -------- | --------- | ------ | -------- | ----- |
+| Sentence CamemBERT (best) | 0.93 | 0.94 | 0.96 | 0.94 | 4.01s |
+| English pre-trained model | 0.95 | 0.96 | 0.95 | 0.95 | 55.06s |
 
 
 ## Thought process, challenges,  ideas
@@ -145,7 +154,11 @@ I identified the following steps to preprocess the data before training the mode
 
 The above keywords can be combined in `training_data_prep` (preprocessing applied to the training data only) and `training_inference_data_prep` (preprocessing applied to training **and** inference) to specify the pipeline.
 
-## About the english pipeline (lazy translation)
+## About the translation from english to french
+
+TODO
+
+## About the english pipeline
 
 The english pipeline consists in translating the user input to english using a [french-to-english translation model]() and a [model pre-trained on CLINC150](https://huggingface.co/dbounds/roberta-large-finetuned-clinc) (in english).
 

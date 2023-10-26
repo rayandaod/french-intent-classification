@@ -5,6 +5,7 @@ import pandas as pd
 import argparse
 import pickle
 import datetime
+import timeit
 
 from sklearn.metrics import confusion_matrix, classification_report
 
@@ -45,6 +46,7 @@ def evaluate(model_name: str, test_path: str, eval_name: str, config: dict, verb
         pretrained_models = load_pretrained_models(prep_fn_shorts=prep_fn_shorts,
                                                    config=config,
                                                    verbose=verbose)
+        start = timeit.default_timer()
         y_pred, _ = predict(model=model,
                             label_enc=label_enc,
                             prep_fn_names=prep_fn_shorts,
@@ -52,18 +54,22 @@ def evaluate(model_name: str, test_path: str, eval_name: str, config: dict, verb
                             pretrained_models=pretrained_models,
                             config=config,
                             verbose=verbose)
+        stop = timeit.default_timer()
         
         # Get the true labels and encode them
         y_true = label_enc.fit_transform(df_test['label'])
         
     else:
         model, tokenizer, translator = get_en_model_tokenizer_trans(config, verbose=verbose)
+
+        start = timeit.default_timer()
         _, y_labels = predict_en(model=model,
                                 tokenizer=tokenizer,
                                 translator=translator,
                                 df=df_test,
                                 config=config,
                                 verbose=verbose)
+        stop = timeit.default_timer()
 
         # Map the y_labels to y_pred using the label encoder
         y_pred = label_enc.transform(y_labels)
@@ -88,6 +94,11 @@ def evaluate(model_name: str, test_path: str, eval_name: str, config: dict, verb
     print(class_report)
     with open(os.path.join(eval_path, 'classification_report.txt'), 'w') as f:
         f.write(class_report)
+
+    # Print the speed and save it in the evaluation folder
+    print(f'\nSpeed: {stop - start:0.2f} seconds\n')
+    with open(os.path.join(eval_path, 'speed.txt'), 'w') as f:
+        f.write(f'{stop - start:0.2f} seconds')
     
     return
 
