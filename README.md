@@ -131,13 +131,13 @@ Results (averaged over the entire dataset):
 
 | Model | Accuracy | Precision | Recall | F1-score | Speed |
 | ----- | -------- | --------- | ------ | -------- | ----- |
-| Sentence-CamemBERT-Large | 0.97 | 0.98 | 0.97 | 0.98 | 0.12s |
-| Sentence-CamemBERT-Base | 0.95 | 0.97 | 0.94 | 0.95 | 0.05s |
+| Log. Reg. on Sentence-CamemBERT-Large | 0.97 | 0.98 | 0.97 | 0.98 | 0.12s |
+| Log. Reg. on Sentence-CamemBERT-Base | 0.95 | 0.97 | 0.94 | 0.95 | 0.05s |
 | English pre-trained | 0.97 | 0.98 | 0.97 | 0.97 | 0.74s |
-| FlauBERT-Base-Uncased (avg) | 0.63 | 0.65 | 0.62 | 0.63 | 0.05s |
-| FlauBERT-Base-Uncased (avg-norm) | 0.57 | 0.69 | 0.51 | 0.56 | 0.05s |
-| FlauBERT-Base-Uncased (sum) | 0.52 | 0.54 | 0.52 | 0.52 | 0.05s |
-| FlauBERT-Base-Uncased (sum-norm) | 0.57 | 0.69 | 0.51 | 0.56 | 0.05s |
+| Log. Reg. on FlauBERT-Base-Uncased (avg) | 0.63 | 0.65 | 0.62 | 0.63 | 0.05s |
+| Log. Reg. on FlauBERT-Base-Uncased (avg-norm) | 0.57 | 0.69 | 0.51 | 0.56 | 0.05s |
+| Log. Reg. on FlauBERT-Base-Uncased (sum) | 0.52 | 0.54 | 0.52 | 0.52 | 0.05s |
+| Log. Reg. on FlauBERT-Base-Uncased (sum-norm) | 0.57 | 0.69 | 0.51 | 0.56 | 0.05s |
 
 More evaluation result details can be found inside the model folders.
 
@@ -147,13 +147,13 @@ This set was provided to me and is located in `data/examples.csv`. Although this
 
 | Model | Accuracy | Precision | Recall | F1-score | Speed |
 | ----- | -------- | --------- | ------ | -------- | ----- |
-| Sentence-CamemBERT-Large | 0.96 | 0.96 | 0.98 | 0.97 | 0.13s |
-| Sentence-CamemBERT-Base | 0.96 | 0.96 | 0.98 | 0.96 | 0.05s |
+| Log. Reg. on Sentence-CamemBERT-Large | 0.96 | 0.96 | 0.98 | 0.97 | 0.13s |
+| Log. Reg. on Sentence-CamemBERT-Base | 0.96 | 0.96 | 0.98 | 0.96 | 0.05s |
 | English pre-trained | 0.95 | 0.96 | 0.95 | 0.95 | 0.68s |
-| FlauBERT-Base-Uncased (avg) | 0.60 | 0.61 | 0.62 | 0.61 | 0.05s |
-| FlauBERT-Base-Uncased (avg-norm) | 0.57 | 0.67 | 0.52 | 0.56 | 0.05s |
-| FlauBERT-Base-Uncased (sum) | 0.57 | 0.60 | 0.60 | 0.59 | 0.05s |
-| FlauBERT-Base-Uncased (sum-norm) | 0.57 | 0.67 | 0.52 | 0.56 | 0.05s |
+| Log. Reg. on FlauBERT-Base-Uncased (avg) | 0.60 | 0.61 | 0.62 | 0.61 | 0.05s |
+| Log. Reg. on FlauBERT-Base-Uncased (avg-norm) | 0.57 | 0.67 | 0.52 | 0.56 | 0.05s |
+| Log. Reg. on FlauBERT-Base-Uncased (sum) | 0.57 | 0.60 | 0.60 | 0.59 | 0.05s |
+| Log. Reg. on FlauBERT-Base-Uncased (sum-norm) | 0.57 | 0.67 | 0.52 | 0.56 | 0.05s |
 
 ## Preprocess the data, train a model, infer, and evaluate
 
