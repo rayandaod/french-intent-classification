@@ -37,7 +37,7 @@ def run_chatbot(model_name: str, config: dict, verbose: bool = False) -> None:
         
         # Get user input and handle ctrl+c
         try:
-            user_input = input('Vous: \t\t')
+            user_input = input('Vous:\t')
             start = timeit.default_timer()
         except KeyboardInterrupt:
             print('\nBot:\tAu revoir!')
