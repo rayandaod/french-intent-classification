@@ -64,7 +64,7 @@ def run_chatbot(model_name: str, config: dict, verbose: bool = False) -> None:
         stop = timeit.default_timer()
         
         print(f'\n>> Prediction: {prediction}')
-        print(f'>> Speed: {stop - start:0.7f} seconds\n')
+        print(f'>> Speed: {stop - start:0.2f} seconds\n')
 
         # Handle the lost_luggage prediction
         if prediction == 'lost_luggage':

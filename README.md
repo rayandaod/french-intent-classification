@@ -60,7 +60,7 @@ conda activate intent_class_env
 python -m pip install -r requirements.txt
 ```
 
-4. Install `nbstripout` to avoid committing notebook outputs:
+4. Eventual collaborators should install `nbstripout` to avoid committing notebook outputs:
 ```bash
 nbstripout --install
 ```
@@ -69,7 +69,7 @@ nbstripout --install
 
 ### `camembert` recipe
 
-This recipe consists in getting a sentence embedding from the user input using a pre-trained [Sentence CamemBERT base model](), and training a logistic regression on the translated CLINC150 dataset (filtered to only contain the classes above). The recipe can be used as follows:
+This recipe consists in getting a sentence embedding from the user input using a pre-trained [Sentence CamemBERT base model](https://huggingface.co/dangvantuan/sentence-camembert-base), and training a logistic regression on the translated CLINC150 dataset (filtered to only contain the classes above). The recipe can be used as follows:
   
 ```bash
   python run_chatbot.py --recipe camembert --verbose
@@ -79,7 +79,7 @@ A command-line chat interface should appear, in which case you will be prompted 
 
 ### `camembert_large` recipe
 
-Same as above, but using the Sentence CamemBERT large model. It can be used as follows:
+Same as above, but using the [Sentence CamemBERT large model](https://huggingface.co/dangvantuan/sentence-camembert-large). It can be used as follows:
   
 ```bash
   python run_chatbot.py --recipe camembert_large --verbose
@@ -144,7 +144,7 @@ This set was provided to me and is located in `data/ILLUIN/examples.csv`. Althou
 | FlauBERT-Base-Uncased (sum) | 0.57 | 0.60 | 0.60 | 0.59 | 0.05s |
 | FlauBERT-Base-Uncased (sum-norm) | 0.57 | 0.67 | 0.52 | 0.56 | 0.05s |
 
-## Preprocess the data and train a model
+## Preprocess the data, train a model, infer, and evaluate
 
 ### Data preprocessing
 
@@ -175,6 +175,48 @@ The `training_data_prep` and `training_inference_data_prep` are lists of keyword
 - `sum`: Merge the word embeddings by summing them
 - `sentenceCamembertBase`: Compute sentence embeddings (using Sentence CamemBERT Base)
 - `sentenceCamembertBase`: Compute sentence embeddings (using Sentence CamemBERT Large)
+
+After setting up the desired recipe, you can run the preprocessing script as follows:
+
+```bash
+python src/preprocess.py --recipe [recipe_name] --verbose
+```
+
+The processed data will be saved in `data/[clinc150_version]`.
+
+### Train a model
+
+Once the data is preprocessed, you can train a model using the following command:
+
+```bash
+python src/train.py --recipe [recipe_name] --verbose
+```
+
+The model `model.pkl` will be saved in `model_zoo/[model_type]_[recipe_name]`.
+
+The file `inference_data_prep.txt` is also saved in `model_zoo/[model_type]_[recipe_name]` and contains the preprocessing steps that need to be applied to the inference data.
+
+### Inference
+
+To run inference on a text input, use the following command:
+
+```bash
+python src/predict.py --model [model_folder_name] --text "text input" --verbose
+```
+
+If you want to use the english pipeline, use the following command:
+
+```bash
+python src/predict_english.py --text "text input" --verbose
+```
+
+### Evaluate
+
+As a reminder, to evaluate a model on a chosen test set (CSV file, as requested in the instructions), use the following command:
+
+```bash
+python evaluate.py --model [model_folder_name] --dataset path/to/dataset.csv --verbose
+```
 
 ## Thought process, challenges,  ideas
 #### Model
@@ -254,6 +296,8 @@ The english pipeline consists in translating the user input to english using a [
 - [x] Check the licenses of the models used
 - [x] Complete the readme and comment the code properly
 - [x] Add a requirements.txt file
+- [ ] Read and install/run everything one last time
+- [ ] Make slides for the presentation
 
 ## Acknowledgements
 

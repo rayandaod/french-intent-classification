@@ -33,7 +33,7 @@ def get_ext_models(prep_fn_shorts: list, config:dict, verbose: bool=False) -> di
     # Get the stopwords from nltk
     if 'stop' in prep_fn_shorts:
         if verbose: print('\n> Gathering french stopwords...')
-        nltk_path = '/Users/rayandaod/Documents/Docs/Job Search/ILLUIN/intent_classification/data/_nltk_data'
+        nltk_path = '../data/_nltk_data'
         if not os.path.exists(nltk_path):
             nltk.download('stopwords', download_dir=nltk_path)
         nltk.data.path.append(nltk_path)
