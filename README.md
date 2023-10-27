@@ -78,7 +78,7 @@ This model was trained using the `camembert` recipe (see below for more info). T
 
 A command-line chat interface should appear, in which case you will be prompted to enter an input. The model will output the predicted class, and repeat. To exit the chat, use Ctrl+C.
 
-### Using model `camembert_large`
+### Using model `logReg_camembert_large`
 
 Same as above, but using the [Sentence CamemBERT large model](https://huggingface.co/dangvantuan/sentence-camembert-large). It can be used as follows:
   
