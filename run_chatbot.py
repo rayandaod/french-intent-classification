@@ -30,7 +30,7 @@ def run_chatbot(model_name: str, config: dict, verbose: bool = False) -> None:
         model, tokenizer, translator = get_en_model_tokenizer_trans(config=config,
                                                                     verbose=args.verbose)
     # Introduce the bot
-    print('\nILLUIN Bot:\tBonjour! Je suis ILLUIN Bot, votre assistant virtuel. Comment puis-je vous aider?')
+    print('\nBot:\tBonjour! Je suis votre assistant virtuel. Comment puis-je vous aider?')
 
     # Start the conversation
     while True:
@@ -40,7 +40,7 @@ def run_chatbot(model_name: str, config: dict, verbose: bool = False) -> None:
             user_input = input('Vous: \t\t')
             start = timeit.default_timer()
         except KeyboardInterrupt:
-            print('\nILLUIN Bot:\tAu revoir!')
+            print('\nBot:\tAu revoir!')
             break
 
         # Convert the user input to a dataframe
@@ -68,9 +68,9 @@ def run_chatbot(model_name: str, config: dict, verbose: bool = False) -> None:
 
         # Handle the lost_luggage prediction
         if prediction == 'lost_luggage':
-            print("ILLUIN Bot:\tJe suis désolé de lire cela. Si j'ai bien compris, vous avez perdu vos bagages. Voici le numéro de téléphone de notre service client: 01 23 45 67 89. Veuillez noter que le coût de l'appel est de 0,15€/min.\n")
+            print("Bot:\tJe suis désolé de lire cela. Si j'ai bien compris, vous avez perdu vos bagages. Voici le numéro de téléphone de notre service client: 01 23 45 67 89. Veuillez noter que le coût de l'appel est de 0,15€/min.\n")
 
-        print('ILLUIN Bot:\tQue puis-je faire d\'autre pour vous?')
+        print('Bot:\tQue puis-je faire d\'autre pour vous?')
 
 
 

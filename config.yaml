@@ -5,7 +5,7 @@ random_state: 42
 verbose: True
 
 # Some paths
-example_set_local_path: 'data/ILLUIN/examples.csv'
+example_set_local_path: 'data/examples.csv'
 clinc150_folder_local_path: 'data/CLINC150'
 
 # Primary classes of interest

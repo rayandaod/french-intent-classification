@@ -2,8 +2,6 @@
 
 This repository contains the code for an Intent Classification pipeline (data pre-processing - pre-trained embeddings - model training/finetuning, command line interface) for french text inputs. It is based on the [CLINC150 dataset](https://github.com/clinc/oos-eval) and explores several techniques to tackle the task.
 
-Thank you ILLUIN Technology for this opportunity!
-
 ## Demonstration
 
 ![Chatbot demo](_readme_assets/chatbot_demo.gif)
@@ -254,7 +252,7 @@ python evaluate.py --model [model_folder_name] --dataset path/to/dataset.csv --v
 
 ### Examples dataset
 
-I was given a csv file (`data/ILLUIN/examples.csv`) containing some examples of user inputs and their corresponding class. However, this dataset is way too small and imbalanced to train a model and will only serve as an example set:
+I was given a csv file containing some examples of user inputs and their corresponding class. However, this dataset is way too small and imbalanced to train a model and will only serve as an example set:
 
 ![Examples class distribution](_readme_assets/examples_class_distrib.png)
 
@@ -311,7 +309,3 @@ The english pipeline consists in translating the user input to english using a [
 - [x] Add a requirements.txt file
 - [x] Read and install/run everything one last time
 - [ ] Make slides for the presentation
-
-## Acknowledgements
-
-Thank you [ILLUIN Technology](https://www.illuin.tech/) for this opportunity!
