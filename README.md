@@ -11,7 +11,7 @@ This repository contains the code for an Intent Classification pipeline (data pr
   - translate
   - travel_alert
   - flight_status
-  - lost_luggage `--> need high recall + need to print warning about costs`
+  - lost_luggage `--> need high precision + need to print warning about costs`
   - travel_suggestion
   - carry_on
   - book_hotel
