@@ -48,7 +48,6 @@ def evaluate(model_name: str, test_path: str, eval_name: str,
                             prep_fn_shorts=prep_fn_shorts,
                             df=df_test,
                             prep_dict=pretrained_models,
-                            config=config,
                             verbose=verbose)
         stop = timeit.default_timer()
         
@@ -122,7 +121,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', '-m', type=str, default='logReg_camembert', help='The model to use for inference.')
     parser.add_argument('--test_path', '-t', type=str, default='data/examples.csv', help='The test set csv file to use for evaluation.')
-    parser.add_argument('--eval_name', '-e', type=str, default='example_set', help='The name of the evaluation folder.')
+    parser.add_argument('--eval_name', '-e', type=str, help='The name of the evaluation folder.')
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print the translated sentence.')
     args = parser.parse_args()
 

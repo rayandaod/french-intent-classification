@@ -175,17 +175,11 @@ def carry_on_enhancer_for_trans(df:pd.DataFrame, ext_models: dict, verbose:bool=
     # Copy the dataframe
     df = df.copy()
 
-    # Replace occurences of 'carry on' in the texts by 'carry on' and a random luggage candidate
-    df['text'] = df[df['label' == 'carry_on']]['text'].apply(lambda x: x.replace('carry on', f'carry on {luggage_candidates[np.random.randint(len(luggage_candidates))]}'))
-
-    # Replace occurences of 'carry ons' in the texts by 'carry on'  and a random luggages candidate
-    df['text'] = df[df['label' == 'carry_on']]['text'].apply(lambda x: x.replace('carry ons', f'carry on {luggages_candidates[np.random.randint(len(luggages_candidates))]}'))
-
-    # Replace occurences of 'carry-on' in the texts by 'carry on' and a random luggage candidate
-    df['text'] = df[df['label' == 'carry_on']]['text'].apply(lambda x: x.replace('carry-on', f'carry on {luggage_candidates[np.random.randint(len(luggage_candidates))]}'))
-
-    # Replace occurences of 'carry-ons' in the texts by 'carry on' and a random luggages candidate
-    df['text'] = df[df['label' == 'carry_on']]['text'].apply(lambda x: x.replace('carry-ons', f'carry on {luggages_candidates[np.random.randint(len(luggages_candidates))]}'))
+    # Replace occurences of 'carry on' in the carry_on label texts by 'carry on' and a random luggage candidate
+    df['text'] = df.apply(lambda x: x['text'].replace('carry on', f"carry on {luggage_candidates[np.random.randint(len(luggage_candidates))]}") if x['label'] == 'carry_on' else x['text'], axis=1)
+    df['text'] = df.apply(lambda x: x['text'].replace('carry ons', f"carry on {luggages_candidates[np.random.randint(len(luggages_candidates))]}") if x['label'] == 'carry_on' else x['text'], axis=1)
+    df['text'] = df.apply(lambda x: x['text'].replace('carry-on', f"carry on {luggage_candidates[np.random.randint(len(luggages_candidates))]}") if x['label'] == 'carry_on' else x['text'], axis=1)
+    df['text'] = df.apply(lambda x: x['text'].replace('carry-ons', f"carry on {luggages_candidates[np.random.randint(len(luggages_candidates))]}") if x['label'] == 'carry_on' else x['text'], axis=1)
 
     return df
 

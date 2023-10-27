@@ -47,6 +47,7 @@ Thank you ILLUIN Technology for this opportunity!
 1. Clone this repository:
 ```bash
 git clone https://github.com/rayandaod/intent-classification.git
+cd intent-classification
 ```
 
 2. Create a virtual environment (e.g with conda):
@@ -65,29 +66,29 @@ python -m pip install -r requirements.txt
 nbstripout --install
 ```
 
-## Quick Start Prediction
+## Quickstart - Run the chatbot
 
-### `camembert` recipe
+### Using model `logReg_camembert`
 
-This recipe consists in getting a sentence embedding from the user input using a pre-trained [Sentence CamemBERT base model](https://huggingface.co/dangvantuan/sentence-camembert-base), and training a logistic regression on the translated CLINC150 dataset (filtered to only contain the classes above). The recipe can be used as follows:
+This model was trained using the `camembert` recipe (see below for more info). This recipe consists in getting a sentence embedding from the user input using a pre-trained [Sentence CamemBERT base model](https://huggingface.co/dangvantuan/sentence-camembert-base), and training a logistic regression on the translated CLINC150 dataset (filtered to only contain the classes above). It can be used as follows:
   
 ```bash
-  python run_chatbot.py --recipe camembert --verbose
+  python run_chatbot.py --model logReg_camembert --verbose
 ```
 
 A command-line chat interface should appear, in which case you will be prompted to enter an input. The model will output the predicted class, and repeat. To exit the chat, use Ctrl+C.
 
-### `camembert_large` recipe
+### Using model `camembert_large`
 
 Same as above, but using the [Sentence CamemBERT large model](https://huggingface.co/dangvantuan/sentence-camembert-large). It can be used as follows:
   
 ```bash
-  python run_chatbot.py --recipe camembert_large --verbose
+  python run_chatbot.py --model logReg_camembert_large --verbose
 ```
 
-### The english recipe
+### Using the pre-trained English model
 
-This model is kind of a lazy one. It consists in translating the user input to english using a [french-to-english translation model](https://huggingface.co/Helsinki-NLP/opus-mt-tc-big-en-fr) and a [model pre-trained on CLINC150](https://huggingface.co/dbounds/roberta-large-finetuned-clinc) (in english). It can be used as follows:
+This is the lazy approach. It consists in translating the user input to english using a [french-to-english translation model](https://huggingface.co/Helsinki-NLP/opus-mt-tc-big-en-fr) and a [model pre-trained on CLINC150](https://huggingface.co/dbounds/roberta-large-finetuned-clinc) (in english) at inference time. It can be used as follows:
   
 ```bash
   python run_chatbot.py --model english --verbose
@@ -95,28 +96,38 @@ This model is kind of a lazy one. It consists in translating the user input to e
 
 Note: the results are good but the model can be slow depending on the text length.
 
-## Quick Start Evaluation
+## Quick Start - Model Evaluation
 
 To evaluate a model on a chosen test set (CSV file, as requested in the instructions), use the following command:
 
 ```python evaluate.py --model [model_folder_name] --dataset path/to/dataset.csv --verbose```
 
-### CLINC150 "plus" test set
+### Evaluation on the CLINC150 "plus" test set
 
-The chosen test set is the CLINC150 ("plus" version) test set, translated to french using [this model](Helsinki-NLP/opus-mt-tc-big-en-fr). It is located at `data/test_oos1_down_carry_trans.csv`.
+To evaluate a model on the CLINC150 "plus" test set, use the following command:
+
+```bash
+python evaluate.py --model logReg_camembert --test_path data/test_oos1_down_carry_trans.csv --eval_name test_set --verbose
+```
+
+Or to evaluate the pre-trained English model:
+
+```bash
+python evaluate.py --model english --test_path data/test_oos1_down_carry_trans.csv --eval_name test_set --verbose
+```
+
+The results are saved in `model_zoo/[model_folder_name]/eval_[eval_name]_[timestamp]/`.
+
+Remarks:
+
+I chose the CLINC150 ("plus" version) test set, translated to french using [this model](Helsinki-NLP/opus-mt-tc-big-en-fr). It is located at `data/test_oos1_down_carry_trans.csv`.
 
 Since the original CLINC150 dataset is in english and contains much more classes, I processed it as follows:
 - First the `oos1` strategy, and `down` (`proportion=2.5`) preprocessing step are adopted (see data preprocessing section at the bottom)
 - Then the `carry` step is applied to enhance the *carry_on* class for translation to french (see data preprocessing section at the bottom)
-- The dataset was finally translated to french
+- The dataset was finally translated to french using the previously mentioned model
 
-To evaluate a model on this test set, you should run:
-
-```bash
-python evaluate.py --model camembert_large --dataset data/test_oos1_down_carry_trans.csv --verbose
-```
-
-The results are averaged over the entire dataset:
+Results (averaged over the entire dataset):
 
 | Model | Accuracy | Precision | Recall | F1-score | Speed |
 | ----- | -------- | --------- | ------ | -------- | ----- |
@@ -128,11 +139,11 @@ The results are averaged over the entire dataset:
 | FlauBERT-Base-Uncased (sum) | 0.52 | 0.54 | 0.52 | 0.52 | 0.05s |
 | FlauBERT-Base-Uncased (sum-norm) | 0.57 | 0.69 | 0.51 | 0.56 | 0.05s |
 
-More evaluation results can be found inside the model folders.
+More evaluation result details can be found inside the model folders.
 
-### Example test set (imbalanced, small)
+### Evaluation on the example test set (imbalanced, small)
 
-This set was provided to me and is located in `data/ILLUIN/examples.csv`. Although this test set is too small and imbalanced to be used for training, we are including it for completeness. The results are averaged over the entire dataset:
+This set was provided to me and is located in `data/examples.csv`. Although this test set is too small and imbalanced to be used for training, we are including it for completeness. The results are averaged over the entire dataset:
 
 | Model | Accuracy | Precision | Recall | F1-score | Speed |
 | ----- | -------- | --------- | ------ | -------- | ----- |
@@ -145,6 +156,8 @@ This set was provided to me and is located in `data/ILLUIN/examples.csv`. Althou
 | FlauBERT-Base-Uncased (sum-norm) | 0.57 | 0.67 | 0.52 | 0.56 | 0.05s |
 
 ## Preprocess the data, train a model, infer, and evaluate
+
+If you wish to reproduce the whole process, or improve it, you can follow the steps below.
 
 ### Data preprocessing
 
@@ -194,14 +207,14 @@ python src/train.py --recipe [recipe_name] --verbose
 
 The model `model.pkl` will be saved in `model_zoo/[model_type]_[recipe_name]`.
 
-The file `inference_data_prep.txt` is also saved in `model_zoo/[model_type]_[recipe_name]` and contains the preprocessing steps that need to be applied to the inference data.
+The file `inference_data_prep.txt` is also saved in `model_zoo/[model_type]_[recipe_name]` and contains the preprocessing steps that will automatically be applied to the inference data.
 
 ### Inference
 
-To run inference on a text input, use the following command:
+To run inference on a single text input, use the following command:
 
 ```bash
-python src/predict.py --model [model_folder_name] --text "text input" --verbose
+python src/predict.py --model logReg_camembert --text "Je voudrais un billet d'avion" --verbose
 ```
 
 If you want to use the english pipeline, use the following command:
@@ -292,11 +305,11 @@ The english pipeline consists in translating the user input to english using a [
 - [x] Find a way to compare model performances
 - [x] Implement the english pipeline (translate french input to english + pre-trained english model inference)
 - [x] Sentence embedding (Sentence CamemBERT)
-- [ ] Fine-tune a french language model on translated CLINC150 dataset
+- [ ] Fine-tune a french language model on filtered-translated CLINC150 dataset
 - [x] Check the licenses of the models used
 - [x] Complete the readme and comment the code properly
 - [x] Add a requirements.txt file
-- [ ] Read and install/run everything one last time
+- [x] Read and install/run everything one last time
 - [ ] Make slides for the presentation
 
 ## Acknowledgements
