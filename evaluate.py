@@ -10,7 +10,7 @@ import timeit
 
 from sklearn.metrics import confusion_matrix, classification_report
 
-from src.helper import parse_config, get_model_name_from_recipe
+from src.helper import parse_config
 from src.preprocess import get_ext_models
 from src.predict import get_model_and_prep_fn_shorts, predict
 from src.predict_english import get_en_model_tokenizer_trans, predict_en

@@ -14,7 +14,7 @@ from tqdm import tqdm
 from src.helper import *
 
 
-def get_en_model_tokenizer_trans(config: dict, verbose: bool = False):
+def get_en_model_tokenizer_trans(config: dict, verbose: bool = False) -> (object, object, object):
     """
     Get the model, the tokenizer and the translator.
     """
@@ -29,7 +29,7 @@ def get_en_model_tokenizer_trans(config: dict, verbose: bool = False):
 
 
 def predict_en(model: object, tokenizer: object, translator: object, 
-            df: pd.DataFrame, config: dict, verbose: bool = False):
+            df: pd.DataFrame, config: dict, verbose: bool = False) -> (pd.Series, pd.Series):
     """
     Predicts the intent of the entries in the dataframe using the "english pipeline"
     (translator -> tokenizer -> pre-trained model)

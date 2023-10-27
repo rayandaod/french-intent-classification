@@ -12,7 +12,7 @@ from src.preprocess import preprocessing_fn_dict, get_ext_models
 from src.helper import *
 
 
-def get_model_and_prep_fn_shorts(model_name: str):
+def get_model_and_prep_fn_shorts(model_name: str) -> (object, list[str]):
     """
     Get the model and the function names for inference data preprocessing.
     """
@@ -25,7 +25,7 @@ def get_model_and_prep_fn_shorts(model_name: str):
 
 
 def predict(model: object, label_enc: object, prep_fn_shorts: list[str],
-            df: pd.DataFrame, prep_dict: dict, verbose: bool = False):
+            df: pd.DataFrame, prep_dict: dict, verbose: bool = False) -> (np.array, str):
     """
     Predicts the intent of the entries in the dataframe using the loaded model and the label encoder.
     Preprocesses the data using the preprocessing functions if needed.
@@ -51,7 +51,7 @@ def predict(model: object, label_enc: object, prep_fn_shorts: list[str],
     return intent_idx_pred, intent_class_name
 
 
-def prepare_and_predict(user_input: str, model_name: str, config: dict, verbose: bool = False):
+def prepare_and_predict(user_input: str, model_name: str, config: dict, verbose: bool = False) -> (str, float):
     """
     Predicts the intent of the user input.
     Loads the model, the label encoder, and any external models needed for inference.
