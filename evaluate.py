@@ -46,11 +46,8 @@ def evaluate(model_name: str, test_path: str, eval_name: str,
         
         # Predict the labels
         start = timeit.default_timer()
-        y_pred, _ = intent_predictor.predict(df=df_test)
+        y_pred, _ = intent_predictor(df_test)
         total_time = timeit.default_timer() - start
-        
-        # Get the true labels and encode them
-        y_true = label_enc.fit_transform(df_test['label'])
         
     # If the model is the English model
     else:
@@ -58,14 +55,14 @@ def evaluate(model_name: str, test_path: str, eval_name: str,
                                                      verbose=verbose)
 
         start = timeit.default_timer()
-        y_labels = intent_predictor_en.predict(df=df_test)
+        _, y_labels = intent_predictor_en(df_test)
         total_time = timeit.default_timer() - start
 
         # Map the y_labels to y_pred using the label encoder
         y_pred = label_enc.transform(y_labels)
 
-        # Get the true labels using the label encoder
-        y_true = label_enc.fit_transform(df_test['label'])
+    # Get the true labels using the label encoder
+    y_true = label_enc.fit_transform(df_test['label'])
 
     # Get the classes
     classes = label_enc.classes_
@@ -102,10 +99,10 @@ def evaluate(model_name: str, test_path: str, eval_name: str,
         f.write(f'\n>> Recall for out_of_scope: {oos_recall:0.2f}')
 
     # Print the average speed and append it to the classification report
-    speed = total_time / len(df_test)
-    print(f'\n>> Average speed: {speed:0.2f} seconds')
+    avg_speed = total_time / len(df_test)
+    print(f'\n>> Average speed: {avg_speed:0.2f} seconds')
     with open(os.path.join(eval_path, 'classification_report.txt'), 'a') as f:
-        f.write(f'\n>> Average speed: {speed:0.2f} seconds')
+        f.write(f'\n>> Average speed: {avg_speed:0.2f} seconds')
     
     return
 

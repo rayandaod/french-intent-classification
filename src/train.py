@@ -5,13 +5,16 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import argparse
 import pickle
 import numpy as np
+import pandas as pd
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 from sklearn.decomposition import PCA
 
+from src.helper import parse_config
+from src import RANDOM_SEED
 
-from src.helper import *
+np.random.seed(RANDOM_SEED)
 
 
 def train(recipe_name: str, config: dict, verbose: bool = False) -> None:
@@ -77,13 +80,14 @@ def train(recipe_name: str, config: dict, verbose: bool = False) -> None:
 if __name__ == '__main__':
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--recipe', '-r', type=str, help='The recipe to use.')
+    parser.add_argument('--recipe', '-r', type=str, default='camembert', help='The recipe to use.')
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print the logs or not.')
     args = parser.parse_args()
 
     # Get the config and set seeds
     config = parse_config("config.yaml")
-    np.random.seed(config['random_state'])
 
     # Train
-    train(recipe_name=args.recipe, config=config, verbose=args.verbose)
+    train(recipe_name=args.recipe,
+          config=config,
+          verbose=args.verbose)

@@ -9,7 +9,7 @@ import timeit
 import numpy as np
 import pandas as pd
 
-from src.preprocess import preprocessing_fn_dict, get_ext_models
+from src.preprocess import DataPreprocessor
 from src.helper import parse_config
 from src import RANDOM_SEED
 
@@ -29,8 +29,8 @@ class IntentPredictor():
         """
         Constructor.
         """
-
-        self.config = parse_config(config_path)
+        
+        # Set the verbose attribute
         self.verbose = verbose
 
         # Get the model, the inference data preprocessing function names, and the label encoder
@@ -38,25 +38,22 @@ class IntentPredictor():
         self.prep_fn_shorts = open(os.path.join('model_zoo', model_name, 'inference_data_prep.txt'), 'r').read().splitlines()
         self.label_enc = pickle.load(open(os.path.join('model_zoo', 'label_encoder.pkl'), 'rb'))
 
-        # Get the pretrained models
-        self.ext_models = get_ext_models(prep_fn_shorts=self.prep_fn_shorts, 
-                                        config=self.config,
-                                        verbose=self.verbose)
+        # Initialise the data preprocessor
+        self.data_preprocessor = DataPreprocessor(prep_fn_shorts=self.prep_fn_shorts,
+                                                  config_path=config_path,
+                                                  verbose=self.verbose)
     
         return
 
 
-    def predict(self, df: pd.DataFrame) -> (str, float):
+    def __call__(self, df: pd.DataFrame) -> (pd.Series, pd.Series):
         """
         Predicts the intent of the user input.
         """
 
         # Preprocess the dataframe
         if 'embedding' not in df.columns:
-            for preprocessing_fn_name in self.prep_fn_shorts:
-                df = preprocessing_fn_dict[preprocessing_fn_name](df,
-                                                                  self.ext_models,
-                                                                  self.verbose)
+            df = self.data_preprocessor(df)
 
         # Get the embeddings
         X = np.array(df['embedding'].tolist())
@@ -66,7 +63,7 @@ class IntentPredictor():
         intent_idx_pred = self.model.predict(X)
         
         # Get the intent name using the label encoder
-        intent_label_pred = self.label_enc.inverse_transform(intent_idx_pred)[0]
+        intent_label_pred = self.label_enc.inverse_transform(intent_idx_pred)
         
         return intent_idx_pred, intent_label_pred
 
@@ -90,8 +87,8 @@ if __name__ == '__main__':
 
     # Predict and time the prediction
     start = timeit.default_timer()
-    prediction, speed = intent_predictor.predict(df)
+    _, label_pred = intent_predictor(df)
     total_time = timeit.default_timer() - start
 
-    print('\nPrediction:', prediction)
+    print('\nPrediction:', label_pred[0])
     print('Total time:', f'{total_time:0.2f}', 'seconds')

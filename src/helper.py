@@ -2,11 +2,14 @@ import yaml
 import pandas as pd
 import matplotlib.pyplot as plt
 
+from tqdm import tqdm
+
 
 def parse_config(config_path: str) -> dict:
     """
     Parse the config.yaml file
     """
+
     # Parse the config file
     with open(config_path, "r") as config_file:
         config = yaml.safe_load(config_file)
@@ -14,20 +17,16 @@ def parse_config(config_path: str) -> dict:
     return config
 
 
-def get_model_name_from_recipe(recipe_name: str, config: dict) -> str:
+def enhanced_apply(function: callable, df: pd.DataFrame, verbose: bool=False) -> pd.Series:
     """
-    Get the model name from a recipe name.
+    Apply a function to a dataframe, with a progress bar if verbose is True.
     """
-    # Get the recipe
-    if recipe_name is not None:
-        recipe = config['recipes'][recipe_name]
+
+    if verbose:
+        tqdm.pandas()
+        return df.progress_apply(function)
     else:
-        recipe = config['recipes'][config['best_recipe']]
-
-    # Get the model type (logReg, etc.)
-    model_type = recipe['model_type']
-
-    return f"{model_type}_{recipe_name}"
+        return df.apply(function)
 
 
 def plot_class_distribution(df: pd.DataFrame, title: str, highlighted_classes: list=[]) -> None:

@@ -148,6 +148,3 @@ recipes: {
     model_type: "logReg"
   }
 }
-
-# Best recipe
-best_recipe: "camembert"

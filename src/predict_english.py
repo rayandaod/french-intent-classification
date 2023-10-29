@@ -28,12 +28,15 @@ class IntentPredictorEnglish():
         """
         Constructor.
         """
-
+        
+        # Parse the config file
         self.config = parse_config(config_path)
+
+        # Set the verbose attribute
         self.verbose = verbose
 
+        # Load the model, the tokenizer, and the translator
         if self.verbose: print('> Loading the model, tokenizer, and translator...')
-    
         self.translator = pipeline("translation", model=self.config['translator_fr_en_model_path'])
         self.model = AutoModelForSequenceClassification.from_pretrained(self.config['pretrained_english_model_path'])
         self.tokenizer = AutoTokenizer.from_pretrained(self.config['pretrained_english_model_path'])
@@ -41,7 +44,7 @@ class IntentPredictorEnglish():
         return
 
 
-    def predict(self, df: pd.DataFrame) -> (str, float):
+    def __call__(self, df: pd.DataFrame) -> (pd.Series, pd.Series):
         """
         Predicts the intent of the entries in the dataframe using the "english pipeline"
         (translator -> tokenizer -> pre-trained model)
@@ -127,7 +130,7 @@ if __name__ == '__main__':
 
     # Predict and time
     start = timeit.default_timer()
-    idx_pred, label_pred = intent_predictor_english.predict(user_input_df)
+    idx_pred, label_pred = intent_predictor_english(user_input_df)
     total_time = timeit.default_timer() - start
     
     print('\nPrediction:', label_pred.iloc[0])
