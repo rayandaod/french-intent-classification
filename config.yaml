@@ -1,9 +1,3 @@
-# Global seed
-random_state: 42
-
-# Verbose
-verbose: True
-
 # Some paths
 example_set_local_path: 'data/examples.csv'
 clinc150_folder_local_path: 'data/CLINC150'

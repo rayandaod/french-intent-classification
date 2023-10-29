@@ -20,7 +20,7 @@ This repository contains the code for an Intent Classification pipeline (data pr
 
 - We should choose metrics to evaluate the algorithm quality
     
-    `--> Done. We will use accuracy, precision, recall, and F1-score. To take into account the instructions, we take a closer look at the out_of_scope and lost_luggage recall (because we want the least number of false negatives).`
+    `--> Done. We will use accuracy, precision, recall, and F1-score. To take into account the instructions, we take a closer look at the out_of_scope recall (because we want the least number of false negatives) and lost_luggage precision (because we want the least number of false positives).`
 - We need a python script running a prediction on a text input
     
     `--> Done + added a command-line chat interface`

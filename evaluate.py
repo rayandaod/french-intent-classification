@@ -11,13 +11,15 @@ import timeit
 from sklearn.metrics import confusion_matrix, classification_report
 
 from src.helper import parse_config
-from src.preprocess import get_ext_models
-from src.predict import get_model_and_prep_fn_shorts, predict
-from src.predict_english import get_en_model_tokenizer_trans, predict_en
+from src.predict import IntentPredictor
+from src.predict_english import IntentPredictorEnglish
+from src import RANDOM_SEED
+
+np.random.seed(RANDOM_SEED)
 
 
 def evaluate(model_name: str, test_path: str, eval_name: str,
-             config: dict, verbose: bool=False) -> None:
+             config_path: str, verbose: bool=False) -> None:
     """
     Evaluate a model on a test set, and save the results in an evaluation folder.
     """
@@ -38,34 +40,26 @@ def evaluate(model_name: str, test_path: str, eval_name: str,
 
     # If the model is not the English model
     if model_name != 'english':
-        model, prep_fn_shorts = get_model_and_prep_fn_shorts(model_name)
-        pretrained_models = get_ext_models(prep_fn_shorts=prep_fn_shorts,
-                                                   config=config,
-                                                   verbose=verbose)
+        intent_predictor = IntentPredictor(model_name=model_name,
+                                           config_path=config_path,
+                                           verbose=verbose)
+        
+        # Predict the labels
         start = timeit.default_timer()
-        y_pred, _ = predict(model=model,
-                            label_enc=label_enc,
-                            prep_fn_shorts=prep_fn_shorts,
-                            df=df_test,
-                            prep_dict=pretrained_models,
-                            verbose=verbose)
-        stop = timeit.default_timer()
+        y_pred, _ = intent_predictor.predict(df=df_test)
+        total_time = timeit.default_timer() - start
         
         # Get the true labels and encode them
         y_true = label_enc.fit_transform(df_test['label'])
         
     # If the model is the English model
     else:
-        model, tokenizer, translator = get_en_model_tokenizer_trans(config, verbose=verbose)
+        intent_predictor_en = IntentPredictorEnglish(config_path=config_path,
+                                                     verbose=verbose)
 
         start = timeit.default_timer()
-        _, y_labels = predict_en(model=model,
-                                tokenizer=tokenizer,
-                                translator=translator,
-                                df=df_test,
-                                config=config,
-                                verbose=verbose)
-        stop = timeit.default_timer()
+        y_labels = intent_predictor_en.predict(df=df_test)
+        total_time = timeit.default_timer() - start
 
         # Map the y_labels to y_pred using the label encoder
         y_pred = label_enc.transform(y_labels)
@@ -108,7 +102,7 @@ def evaluate(model_name: str, test_path: str, eval_name: str,
         f.write(f'\n>> Recall for out_of_scope: {oos_recall:0.2f}')
 
     # Print the average speed and append it to the classification report
-    speed = (stop - start) / len(df_test)
+    speed = total_time / len(df_test)
     print(f'\n>> Average speed: {speed:0.2f} seconds')
     with open(os.path.join(eval_path, 'classification_report.txt'), 'a') as f:
         f.write(f'\n>> Average speed: {speed:0.2f} seconds')
@@ -120,18 +114,15 @@ if __name__ == '__main__':
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', '-m', type=str, default='logReg_camembert', help='The model to use for inference.')
-    parser.add_argument('--test_path', '-t', type=str, default='data/examples.csv', help='The test set csv file to use for evaluation.')
-    parser.add_argument('--eval_name', '-e', type=str, help='The name of the evaluation folder.')
+    parser.add_argument('--test_path', '-t', type=str, help='The test set csv file to use for evaluation.')
+    parser.add_argument('--eval_name', '-n', type=str, help='The name of the evaluation folder.')
+    parser.add_argument('--config', '-c', type=str, default='config.yaml', help='The path to the configuration file.')
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print the translated sentence.')
     args = parser.parse_args()
-
-    # Get the config and set seed
-    config = parse_config("config.yaml")
-    np.random.seed(config['random_state'])
 
     # Evaluate the model
     evaluate(model_name=args.model,
              test_path=args.test_path,
              eval_name=args.eval_name,
-             config=config,
+             config_path=args.config,
              verbose=args.verbose)

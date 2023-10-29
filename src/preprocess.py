@@ -16,6 +16,9 @@ from datasets import load_dataset
 from tqdm import tqdm
 
 from src.helper import parse_config
+from src import RANDOM_SEED
+
+np.random.seed(RANDOM_SEED)
 
 
 def get_ext_models(prep_fn_shorts: list, config:dict, verbose: bool=False) -> dict:
@@ -446,7 +449,6 @@ if __name__ == '__main__':
 
     # Get the config and set the random seed
     config = parse_config('config.yaml')
-    np.random.seed(config['random_state'])
 
     # Get the recipe
     if args.recipe is not None:
