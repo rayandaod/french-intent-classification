@@ -134,4 +134,4 @@ if __name__ == '__main__':
     total_time = timeit.default_timer() - start
     
     print('\nPrediction:', label_pred.iloc[0])
-    print('Total time:', f'{total_time:0.2f}', 'seconds')
+    print('Speed:', f'{total_time:0.2f}', 'seconds')
