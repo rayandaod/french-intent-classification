@@ -10,7 +10,6 @@ import numpy as np
 import pandas as pd
 
 from src.preprocess import DataPreprocessor
-from src.helper import parse_config
 from src import RANDOM_SEED
 
 np.random.seed(RANDOM_SEED)

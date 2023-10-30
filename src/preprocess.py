@@ -84,6 +84,25 @@ class DataPreprocessor():
             'sentence_camembert_model': sentence_camembert_model
         }
 
+        # Set the preprocessing function dictionary
+        self.prep_fn_dict = {
+            'oos1': self.oos_strat_1,
+            'oos2': self.oos_strat_2,
+            'down': self.downsample_oos,
+            'carry': self.carry_on_enhancer_for_trans,
+            'trans': self.translate_en_fr,
+            'stop': self.remove_stopwords,
+            'flaubertSmallCased': self.flaubert_enc,
+            'flaubertBaseUncased': self.flaubert_enc,
+            'flaubertBaseCased': self.flaubert_enc,
+            'flaubertLargeCased': self.flaubert_enc,
+            'avg': self.avg_word_emb,
+            'sum': self.sum_word_emb,
+            'norm': self.norm_emb,
+            'sentenceCamembertBase': self.sentence_camembert,
+            'sentenceCamembertLarge': self.sentence_camembert,
+        }
+
         # Set the verbose attribute
         self.verbose = verbose
 
@@ -98,12 +117,9 @@ class DataPreprocessor():
         # Copy the dataframe
         df = df.copy()
 
-        # Get the preprocessing function references in a dictionary
-        prep_fn_dict = self.get_prep_fn_dict()
-
         # Apply the preprocessing functions
         for preprocessing_fn_name in self.prep_fn_shorts:
-            df = prep_fn_dict[preprocessing_fn_name](df)
+            df = self.prep_fn_dict[preprocessing_fn_name](df)
 
         return df
     
@@ -236,7 +252,7 @@ class DataPreprocessor():
         return df
 
 
-    def flaubert_encoder(self, df:pd.DataFrame) -> pd.DataFrame:
+    def flaubert_enc(self, df:pd.DataFrame) -> pd.DataFrame:
         """
         Encode each word using the previously loaded FlauBERT model and tokenizer.
         """
@@ -272,7 +288,7 @@ class DataPreprocessor():
         return df
 
 
-    def average_word_emb(self, df:pd.DataFrame) -> pd.DataFrame:
+    def avg_word_emb(self, df:pd.DataFrame) -> pd.DataFrame:
         """
         Merge the word embeddings by averaging them.
         """
@@ -347,28 +363,6 @@ class DataPreprocessor():
 
         if self.verbose: print('Sentence embedding shape:', df.iloc[0]['embedding'].shape)
         return df
-    
-
-    def get_prep_fn_dict(self):
-        # Store the preprocessing function references in a dictionary
-        # Each of these functions takes a dataframe as input and returns a dataframe as output
-        return {
-            'oos1': self.oos_strat_1,
-            'oos2': self.oos_strat_2,
-            'down': self.downsample_oos,
-            'carry': self.carry_on_enhancer_for_trans,
-            'trans': self.translate_en_fr,
-            'stop': self.remove_stopwords,
-            'flaubertSmallCased': self.flaubert_encoder,
-            'flaubertBaseUncased': self.flaubert_encoder,
-            'flaubertBaseCased': self.flaubert_encoder,
-            'flaubertLargeCased': self.flaubert_encoder,
-            'avg': self.average_word_emb,
-            'sum': self.sum_word_emb,
-            'norm': self.norm_emb,
-            'sentenceCamembertBase': self.sentence_camembert,
-            'sentenceCamembertLarge': self.sentence_camembert,
-        }
 
 
 
@@ -431,9 +425,6 @@ def preprocess_dataset(recipe_name:str, config_path: str, verbose: bool) -> None
         # Load and prepare the split
         df = load_clinc150_dataset_split(dataset, split=split, verbose=verbose)
 
-        # Get the dictionary of preprocessing functions
-        prep_fn_dict = data_prep.get_prep_fn_dict()
-
         # Apply the preprocessing functions and save the intermediate dataframes 
         # by concatenating the short names of the preprocessing functions that happened until now
         concat_short_names = f'{split}'
@@ -448,7 +439,7 @@ def preprocess_dataset(recipe_name:str, config_path: str, verbose: bool) -> None
             
             # Apply the preprocessing function if the file does not already exist
             if not os.path.exists(os.path.join(dataset_folder, f'{concat_short_names}.pkl')):
-                df = prep_fn_dict[preprocessing_fn_name](df)
+                df = data_prep.prep_fn_dict[preprocessing_fn_name](df)
                 df.to_pickle(os.path.join(dataset_folder, f'{concat_short_names}.pkl'))
             
             # Load the dataframe if the file already exists

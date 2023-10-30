@@ -12,7 +12,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from transformers import pipeline
 from tqdm import tqdm
 
-from src.helper import parse_config
+from src.helper import parse_config, enhanced_apply
 from src import RANDOM_SEED
 
 np.random.seed(RANDOM_SEED)
@@ -55,61 +55,39 @@ class IntentPredictorEnglish():
 
         # Translate
         translate = lambda x: self.translator(x)[0]['translation_text']
-        if self.verbose:
-            print('\n> Translating to english...')
-            tqdm.pandas()
-            df['text_en'] = df['text'].progress_apply(translate)
-        else:
-            df['text_en'] = df['text'].apply(translate)
+        if self.verbose: print('\n> Translating to english...')
+        df['text_en'] = enhanced_apply(translate, df['text'], verbose=self.verbose)
 
         # Tokenize
         tokenize = lambda x: self.tokenizer(x, return_tensors="pt")['input_ids']
-        if self.verbose:
-            print('\n> Tokenizing the user input...')
-            df['input_ids'] = df['text_en'].progress_apply(tokenize)
-        else:
-            df['input_ids'] = df['text_en'].apply(tokenize)
+        if self.verbose: print('\n> Tokenizing the user input...')
+        df['input_ids'] = enhanced_apply(tokenize, df['text_en'], verbose=self.verbose)
 
         # Predict
         predict = lambda x: torch.argmax(self.model(x)[0]).item()
-        if self.verbose:
-            print('\n> Predicting the intent index...')
-            df['intent_idx_pred'] = df['input_ids'].progress_apply(predict)
-        else:
-            df['intent_idx_pred'] = df['input_ids'].apply(predict)
+        if self.verbose: print('\n> Predicting the intent index...')
+        df['intent_idx_pred'] = enhanced_apply(predict, df['input_ids'], verbose=self.verbose)
 
         # Get the class names from the predicted indices
         get_class_names_from_idx = lambda x: self.model.config.id2label[x]
-        if self.verbose:
-            print('\n> Getting the class names...')
-            df['intent_label_pred'] = df['intent_idx_pred'].progress_apply(get_class_names_from_idx)
-        else:
-            df['intent_label_pred'] = df['intent_idx_pred'].apply(get_class_names_from_idx)
+        if self.verbose: print('\n> Getting the class names...')
+        df['intent_label_pred'] = enhanced_apply(get_class_names_from_idx, df['intent_idx_pred'], verbose=self.verbose)
 
         # Replace 'oos' with 'out_of_scope'
         replace_oos = lambda x: 'out_of_scope' if x == 'oos' else x
-        if self.verbose:
-            print('\n> Replacing \'oos\' with \'out_of_scope\'...')
-            df['intent_label_pred'] = df['intent_label_pred'].progress_apply(replace_oos)
-        else:
-            df['intent_label_pred'] = df['intent_label_pred'].apply(replace_oos)
+        if self.verbose: print('\n> Replacing \'oos\' with \'out_of_scope\'...')
+        df['intent_label_pred'] = enhanced_apply(replace_oos, df['intent_label_pred'], verbose=self.verbose)
 
         # Since this method uses a model trained on the full CLINC150 dataset,
         # we return 'out_of_scope' if the predicted intent is not in config['classes']
         map_labels_to_oos = lambda x: 'out_of_scope' if x not in self.config['classes'] else x
-        if self.verbose:
-            print('\n> Replacing intents not in config[\'classes\'] with \'out_of_scope\'...')
-            df['intent_label_pred'] = df['intent_label_pred'].progress_apply(map_labels_to_oos)
-        else:
-            df['intent_label_pred'] = df['intent_label_pred'].apply(map_labels_to_oos)
+        if self.verbose: print('\n> Replacing intents not in config[\'classes\'] with \'out_of_scope\'...')
+        df['intent_label_pred'] = enhanced_apply(map_labels_to_oos, df['intent_label_pred'], verbose=self.verbose)
 
         # Match the idx of the intents not in config['classes'] to the idx of 'out_of_scope'
         map_idx_to_oos_idx = lambda x: self.model.config.label2id['oos'] if x == 'out_of_scope' else self.model.config.label2id[x]
-        if self.verbose:
-            print('\n> Matching the idx of the intents not in config[\'classes\'] to the idx of \'out_of_scope\'...')
-            df['intent_idx_pred'] = df['intent_label_pred'].progress_apply(map_idx_to_oos_idx)
-        else:
-            df['intent_idx_pred'] = df['intent_label_pred'].apply(map_idx_to_oos_idx)
+        if self.verbose: print('\n> Matching the idx of the intents not in config[\'classes\'] to the idx of \'out_of_scope\'...')
+        df['intent_idx_pred'] = enhanced_apply(map_idx_to_oos_idx, df['intent_label_pred'], verbose=self.verbose)
 
         return df['intent_idx_pred'], df['intent_label_pred']
 
