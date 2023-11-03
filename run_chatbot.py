@@ -4,8 +4,7 @@ import readline
 import numpy as np
 import pandas as pd
 
-from src.predict import IntentPredictor
-from src.predict_english import IntentPredictorEnglish
+from src.predict import IntentPredictor, IntentPredictorEnglish
 from src import RANDOM_SEED
 
 np.random.seed(RANDOM_SEED)

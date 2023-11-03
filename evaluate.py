@@ -10,8 +10,7 @@ import timeit
 
 from sklearn.metrics import confusion_matrix, classification_report
 
-from src.predict import IntentPredictor
-from src.predict_english import IntentPredictorEnglish
+from src.predict import IntentPredictor, IntentPredictorEnglish
 from src import RANDOM_SEED
 
 np.random.seed(RANDOM_SEED)
