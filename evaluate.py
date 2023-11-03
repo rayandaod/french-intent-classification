@@ -6,7 +6,6 @@ import pandas as pd
 import argparse
 import pickle
 import datetime
-import timeit
 import logging
 
 from sklearn.metrics import confusion_matrix, classification_report
@@ -42,19 +41,15 @@ def evaluate(model_name: str, test_path: str, eval_name: str, config_path: str) 
                                            config_path=config_path)
         
         # Predict the labels
-        start = timeit.default_timer()
         y_pred, _ = intent_predictor(df_test)
-        total_time = timeit.default_timer() - start
         
     # If the model is the English model
     else:
         intent_predictor_en = IntentPredictorEnglish(config_path=config_path)
 
-        start = timeit.default_timer()
-        _, y_labels = intent_predictor_en(df_test)
-        total_time = timeit.default_timer() - start
-
+        # Predict the labels
         # Map the y_labels to y_pred using the label encoder
+        _, y_labels = intent_predictor_en(df_test)
         y_pred = label_enc.transform(y_labels)
 
     # Get the true labels using the label encoder
@@ -93,12 +88,6 @@ def evaluate(model_name: str, test_path: str, eval_name: str, config_path: str) 
     print(f'\n>> Recall for out_of_scope: {oos_recall:0.2f}')
     with open(os.path.join(eval_path, 'classification_report.txt'), 'a') as f:
         f.write(f'\n>> Recall for out_of_scope: {oos_recall:0.2f}')
-
-    # Print the average speed and append it to the classification report
-    avg_speed = total_time / len(df_test)
-    print(f'\n>> Average speed: {avg_speed:0.2f} seconds')
-    with open(os.path.join(eval_path, 'classification_report.txt'), 'a') as f:
-        f.write(f'\n>> Average speed: {avg_speed:0.2f} seconds')
     
     return
 
@@ -110,12 +99,11 @@ if __name__ == '__main__':
     parser.add_argument('--test_path', '-t', type=str, help='The test set csv file to use for evaluation.')
     parser.add_argument('--eval_name', '-n', type=str, help='The name of the evaluation folder.')
     parser.add_argument('--config', '-c', type=str, default='config.yaml', help='The path to the configuration file.')
-    parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print the translated sentence.')
+    parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print logs.')
     args = parser.parse_args()
 
     # Set the logging level
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO if args.verbose else None)
 
     # Evaluate the model
     evaluate(model_name=args.model,

@@ -18,8 +18,7 @@ def run_chatbot(model_name: str,
     """
 
     if model_name != 'english':
-        intent_predictor = IntentPredictor(model_name=model_name,
-                                           config_path=config_path)
+        intent_predictor = IntentPredictor(model_name=model_name, config_path=config_path)
     else:
         intent_predictor = IntentPredictorEnglish(config_path=config_path)
         
@@ -49,8 +48,7 @@ def run_chatbot(model_name: str,
         # Stop the timer
         total_time = timeit.default_timer() - start
         
-        print(f'\n>> Prediction: {prediction}')
-        print(f'>> Speed: {total_time:0.2f} seconds\n')
+        print(f'\nPrediction: {prediction}\n')
 
         # Handle the lost_luggage prediction
         if prediction == 'lost_luggage':
@@ -69,7 +67,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     # Set the logging level
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO if args.verbose else None)
 
+    # Run the chatbot
     run_chatbot(model_name=args.model, config_path=args.config)

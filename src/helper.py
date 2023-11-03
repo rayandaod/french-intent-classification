@@ -2,6 +2,7 @@ import yaml
 import pandas as pd
 import matplotlib.pyplot as plt
 import logging
+import timeit
 
 from tqdm import tqdm
 
@@ -28,6 +29,21 @@ def enhanced_apply(function: callable, df: pd.DataFrame) -> pd.Series:
         return df.progress_apply(function)
     else:
         return df.apply(function)
+    
+
+def timeit_decorator(method: callable) -> callable:
+    """
+    Decorator to time a method.
+    """
+
+    def timed(*args, **kwargs):
+        start = timeit.default_timer()
+        result = method(*args, **kwargs)
+        total_time = timeit.default_timer() - start
+        logging.info(f"Time taken: {total_time:0.2f} seconds")
+        return result
+
+    return timed
 
 
 def plot_class_distribution(df: pd.DataFrame, title: str, highlighted_classes: list=[]) -> None:

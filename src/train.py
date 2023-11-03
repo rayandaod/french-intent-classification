@@ -85,8 +85,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Set the logging level
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO if args.verbose else None)
 
     # Get the config and set seeds
     config = parse_config("config.yaml")

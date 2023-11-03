@@ -15,7 +15,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from transformers import pipeline
 
 from src.preprocess import DataPreprocessor
-from src.helper import enhanced_apply, parse_config
+from src.helper import enhanced_apply, parse_config, timeit_decorator
 from src import RANDOM_SEED
 
 np.random.seed(RANDOM_SEED)
@@ -45,7 +45,8 @@ class IntentPredictor():
     
         return
 
-
+    
+    @timeit_decorator
     def __call__(self, df: pd.DataFrame) -> (pd.Series, pd.Series):
         """
         Predicts the intent of the user input.
@@ -89,7 +90,7 @@ class IntentPredictorEnglish():
     
         return
 
-
+    @timeit_decorator
     def __call__(self, df: pd.DataFrame) -> (pd.Series, pd.Series):
         """
         Predicts the intent of the entries in the dataframe using the "english pipeline"
@@ -148,8 +149,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Set the logging level
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO if args.verbose else None)
 
     # Initialize the predictor
     if args.model != 'english':
@@ -161,9 +161,6 @@ if __name__ == '__main__':
     df = pd.DataFrame({'text': [args.text]})
 
     # Predict and time the prediction
-    start = timeit.default_timer()
     _, label_pred = intent_predictor(df)
-    total_time = timeit.default_timer() - start
 
     print('\nPrediction:', label_pred[0])
-    print('Speed:', f'{total_time:0.2f}', 'seconds')
