@@ -218,7 +218,7 @@ python src/predict.py --model logReg_camembert --text "Je voudrais un billet d'a
 If you want to use the english pipeline, use the following command:
 
 ```bash
-python src/predict_english.py --text "text input" --verbose
+python src/predict.py --model english --text "text input" --verbose
 ```
 
 ### Evaluate
