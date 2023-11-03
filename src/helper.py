@@ -1,6 +1,7 @@
 import yaml
 import pandas as pd
 import matplotlib.pyplot as plt
+import logging
 
 from tqdm import tqdm
 
@@ -17,12 +18,12 @@ def parse_config(config_path: str) -> dict:
     return config
 
 
-def enhanced_apply(function: callable, df: pd.DataFrame, verbose: bool=False) -> pd.Series:
+def enhanced_apply(function: callable, df: pd.DataFrame) -> pd.Series:
     """
-    Apply a function to a dataframe, with a progress bar if verbose is True.
+    Apply a function to a dataframe, with a progress bar if logging is enabled.
     """
 
-    if verbose:
+    if logging.getLogger().isEnabledFor(logging.INFO):
         tqdm.pandas()
         return df.progress_apply(function)
     else:

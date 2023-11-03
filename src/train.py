@@ -6,10 +6,10 @@ import argparse
 import pickle
 import numpy as np
 import pandas as pd
+import logging
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
-from sklearn.decomposition import PCA
 
 from src.helper import parse_config
 from src import RANDOM_SEED
@@ -17,7 +17,7 @@ from src import RANDOM_SEED
 np.random.seed(RANDOM_SEED)
 
 
-def train(recipe_name: str, config: dict, verbose: bool = False) -> None:
+def train(recipe_name: str, config: dict) -> None:
     """
     Train a model according to the recipe.
     """
@@ -48,7 +48,7 @@ def train(recipe_name: str, config: dict, verbose: bool = False) -> None:
     y = label_encoder.fit_transform(y)
 
     # Choose the model
-    if verbose: print('\n> Training the model...')
+    logging.info('Training the model...')
     model_type = recipe['model_type']
     
     # Logistic regression
@@ -64,7 +64,7 @@ def train(recipe_name: str, config: dict, verbose: bool = False) -> None:
 
     # Save the model and the label encoder
     model_folder_name = model_type + '_' + recipe_name
-    if verbose: print(f'\n> Saving the model in {model_folder_name}...')
+    logging.info(f'Saving the model in {model_folder_name}...')
     model_path = f'model_zoo/{model_folder_name}'
     os.makedirs(model_path, exist_ok=True)
     pickle.dump(model, open(f'{model_path}/model.pkl', 'wb'))
@@ -84,10 +84,12 @@ if __name__ == '__main__':
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print the logs or not.')
     args = parser.parse_args()
 
+    # Set the logging level
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO)
+
     # Get the config and set seeds
     config = parse_config("config.yaml")
 
     # Train
-    train(recipe_name=args.recipe,
-          config=config,
-          verbose=args.verbose)
+    train(recipe_name=args.recipe, config=config)

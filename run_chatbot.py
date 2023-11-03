@@ -3,6 +3,7 @@ import argparse
 import readline
 import numpy as np
 import pandas as pd
+import logging
 
 from src.predict import IntentPredictor, IntentPredictorEnglish
 from src import RANDOM_SEED
@@ -11,19 +12,16 @@ np.random.seed(RANDOM_SEED)
 
 
 def run_chatbot(model_name: str,
-                config_path: str,
-                verbose: bool = False) -> None:
+                config_path: str) -> None:
     """
     Run the chatbot using the specified model.
     """
 
     if model_name != 'english':
         intent_predictor = IntentPredictor(model_name=model_name,
-                                           config_path=config_path,
-                                           verbose=verbose)
+                                           config_path=config_path)
     else:
-        intent_predictor = IntentPredictorEnglish(config_path=config_path,
-                                                  verbose=verbose)
+        intent_predictor = IntentPredictorEnglish(config_path=config_path)
         
 
     # Introduce the bot
@@ -69,7 +67,9 @@ if __name__ == '__main__':
     parser.add_argument('--config', '-c', type=str, default='config.yaml', help='The path to the config file.')
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print logs.')
     args = parser.parse_args()
+    
+    # Set the logging level
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO)
 
-    run_chatbot(model_name=args.model,
-                config_path=args.config,
-                verbose=args.verbose)
+    run_chatbot(model_name=args.model, config_path=args.config)

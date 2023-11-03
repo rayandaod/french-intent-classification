@@ -7,6 +7,7 @@ import argparse
 import pickle
 import datetime
 import timeit
+import logging
 
 from sklearn.metrics import confusion_matrix, classification_report
 
@@ -16,8 +17,7 @@ from src import RANDOM_SEED
 np.random.seed(RANDOM_SEED)
 
 
-def evaluate(model_name: str, test_path: str, eval_name: str,
-             config_path: str, verbose: bool=False) -> None:
+def evaluate(model_name: str, test_path: str, eval_name: str, config_path: str) -> None:
     """
     Evaluate a model on a test set, and save the results in an evaluation folder.
     """
@@ -39,8 +39,7 @@ def evaluate(model_name: str, test_path: str, eval_name: str,
     # If the model is not the English model
     if model_name != 'english':
         intent_predictor = IntentPredictor(model_name=model_name,
-                                           config_path=config_path,
-                                           verbose=verbose)
+                                           config_path=config_path)
         
         # Predict the labels
         start = timeit.default_timer()
@@ -49,8 +48,7 @@ def evaluate(model_name: str, test_path: str, eval_name: str,
         
     # If the model is the English model
     else:
-        intent_predictor_en = IntentPredictorEnglish(config_path=config_path,
-                                                     verbose=verbose)
+        intent_predictor_en = IntentPredictorEnglish(config_path=config_path)
 
         start = timeit.default_timer()
         _, y_labels = intent_predictor_en(df_test)
@@ -115,9 +113,12 @@ if __name__ == '__main__':
     parser.add_argument('--verbose', '-v', action='store_true', help='Whether to print the translated sentence.')
     args = parser.parse_args()
 
+    # Set the logging level
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO)
+
     # Evaluate the model
     evaluate(model_name=args.model,
              test_path=args.test_path,
              eval_name=args.eval_name,
-             config_path=args.config,
-             verbose=args.verbose)
+             config_path=args.config)
